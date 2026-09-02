@@ -1,0 +1,41 @@
+# Dockerfile para ERP.Web
+# Multi-stage build para otimizar o tamanho da imagem
+
+# Stage 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copiar arquivos de solução e projetos
+COPY ["ERP.SaaS.sln", "."]
+COPY ["src/ERP.Web/ERP.Web.csproj", "src/ERP.Web/"]
+COPY ["src/ERP.Shared/ERP.Shared.csproj", "src/ERP.Shared/"]
+COPY ["src/ERP.Master/ERP.Master.csproj", "src/ERP.Master/"]
+COPY ["src/ERP.Tenant/ERP.Tenant.csproj", "src/ERP.Tenant/"]
+
+# Restaurar dependências
+RUN dotnet restore "ERP.SaaS.sln"
+
+# Copiar código fonte
+COPY . .
+
+# Build da aplicação
+RUN dotnet publish "src/ERP.Web/ERP.Web.csproj" -c Release -o /app/publish --no-restore
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+
+# Copiar arquivos publicados
+COPY --from=build /app/publish .
+
+# Configurar entrada
+ENTRYPOINT ["dotnet", "ERP.Web.dll"]
+
+# Portas expostas
+EXPOSE 80
+EXPOSE 443
+
+# Variáveis de ambiente
+ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false

@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # API Web
+  erp-web:
+    image: erpsaas/web:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    container_name: erp-web
+    restart: unless-stopped
+    ports:
+      - "5000:80"
+      - "5001:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5001
+      - ConnectionStrings__MasterConnection=Host=erp-db;Port=5432;Database=erp_master;Username=postgres;Password=postgres
+    depends_on:
+      - erp-db
+    networks:
+      - erp-network
+
+  # Banco de dados PostgreSQL
+  erp-db:
+    image: postgres:15-alpine
+    container_name: erp-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=erp_master
+    volumes:
+      - erp-db-data:/var/lib/postgresql/data
+      - ./scripts/database:/docker-entrypoint-initdb.d
+    networks:
+      - erp-network
+
+  # Redis para cache
+  erp-redis:
+    image: redis:7-alpine
+    container_name: erp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - erp-redis-data:/data
+    networks:
+      - erp-network
+
+  # Seq para logging
+  erp-seq:
+    image: datalust/seq:latest
+    container_name: erp-seq
+    restart: unless-stopped
+    ports:
+      - "5341:80"
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - erp-seq-data:/data
+    networks:
+      - erp-network
+
+  # PGAdmin para gerenciamento do banco
+  erp-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: erp-pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@erpsaas.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      - erp-pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - erp-db
+    networks:
+      - erp-network
+
+volumes:
+  erp-db-data:
+  erp-redis-data:
+  erp-seq-data:
+  erp-pgadmin-data:
+
+networks:
+  erp-network:
+    driver: bridge

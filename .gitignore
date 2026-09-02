@@ -1,0 +1,52 @@
+# Dependencies
+/bin/
+/obj/
+
+# User secrets
+/appsettings.Development.json
+/secrets/
+
+# Docker
+/docker-compose.override.yml
+/docker-compose.dev.yml
+
+# IDE
+.idea/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+Logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test results
+/TestResults/
+/coverage/
+
+# Local database
+*.db
+*.sqlite
+
+# Node (if frontend is added later)
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
