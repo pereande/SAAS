@@ -1,6 +1,0 @@
-/src/src/ERP.Tenant/obj/Release/net8.0/ERP.Tenant.csproj.AssemblyReference.cache
-/src/src/ERP.Tenant/obj/Release/net8.0/ERP.Tenant.GeneratedMSBuildEditorConfig.editorconfig
-/src/src/ERP.Tenant/obj/Release/net8.0/ERP.Tenant.AssemblyInfoInputs.cache
-/src/src/ERP.Tenant/obj/Release/net8.0/ERP.Tenant.AssemblyInfo.cs
-/src/src/ERP.Tenant/obj/Release/net8.0/ERP.Tenant.csproj.CoreCompileInputs.cache
-/src/src/ERP.Tenant/obj/Release/net8.0/ERP.Tenant.sourcelink.json

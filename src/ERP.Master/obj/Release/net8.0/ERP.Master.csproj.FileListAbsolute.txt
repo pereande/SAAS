@@ -1,6 +1,0 @@
-/src/src/ERP.Master/obj/Release/net8.0/ERP.Master.csproj.AssemblyReference.cache
-/src/src/ERP.Master/obj/Release/net8.0/ERP.Master.GeneratedMSBuildEditorConfig.editorconfig
-/src/src/ERP.Master/obj/Release/net8.0/ERP.Master.AssemblyInfoInputs.cache
-/src/src/ERP.Master/obj/Release/net8.0/ERP.Master.AssemblyInfo.cs
-/src/src/ERP.Master/obj/Release/net8.0/ERP.Master.csproj.CoreCompileInputs.cache
-/src/src/ERP.Master/obj/Release/net8.0/ERP.Master.sourcelink.json

@@ -1,6 +1,6 @@
 # Dependencies
-/bin/
-/obj/
+bin/
+obj/
 
 # User secrets
 /appsettings.Development.json
