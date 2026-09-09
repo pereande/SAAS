@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OtpNet;
 
-namespace ERP.Shared.Services;
+namespace ERP.Web.Services;
 
 /// <summary>
 /// Serviço para autenticação de dois fatores (2FA) usando TOTP

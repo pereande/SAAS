@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Shared.Constants;
-using ERP.Shared.Services;
+using ERP.Web.Services;
 using ERP.Web.DTOs.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;

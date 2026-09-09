@@ -2,6 +2,8 @@ using System.Text;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Shared.Settings;
+using ERP.Web.Middleware;
+using ERP.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -87,7 +89,8 @@ try
         var jwtSettings = builder.Configuration.GetSection("AppSettings:Jwt").Get<JwtSettings>();
         
         options.SaveToken = true;
-        options.RequireHttpsMetadata = false; // TODO: Set to true in production
+        // Safe for local development (no HTTPS), strict in production
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = jwtSettings.ValidateIssuer,
@@ -149,10 +152,27 @@ try
         app.UseSwaggerUI();
     }
 
+    // Middleware pipeline (order matters):
+    // 1. Exception handling (outermost — catches all unhandled errors)
+    // 2. HTTPS redirection
+    // 3. Routing
+    // 4. CORS
+    // 5. Authentication
+    // 6. Tenant resolution
+    // 7. Tenant validation (DB/status check)
+    // 8. Custom authorization (RBAC)
+    // 9. Built-in authorization
+    // 10. Audit logging
+    app.UseMiddleware<ExceptionMiddleware>();
     app.UseHttpsRedirection();
+    app.UseRouting();
     app.UseCors("Default");
     app.UseAuthentication();
+    app.UseTenantResolution();
+    app.UseTenantValidation();
+    app.UseAuthorizationMiddleware();
     app.UseAuthorization();
+    app.UseAuditLogging();
     app.MapControllers();
 
     // Aplicar migrations no startup (apenas em desenvolvimento)
