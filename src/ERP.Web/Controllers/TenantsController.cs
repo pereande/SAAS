@@ -125,7 +125,7 @@ public class TenantsController : BaseController
             var dbName = $"erp_tenant_{Guid.NewGuid():N}".ToLower();
             var connectionString = GetTenantConnectionString(dbName);
 
-            var tenant = new Tenant
+            var tenant = new ERP.Master.Models.Tenant
             {
                 Name = request.Name,
                 Cnpj = request.Cnpj,
@@ -220,7 +220,7 @@ public class TenantsController : BaseController
         }
     }
 
-    private TenantDto MapToDto(Tenant t) => new TenantDto
+    private TenantDto MapToDto(ERP.Master.Models.Tenant t) => new TenantDto
     {
         Id = t.Id,
         Name = t.Name,
@@ -247,7 +247,7 @@ public class TenantsController : BaseController
         } : null
     };
 
-    private TenantDetailsDto MapToDetailsDto(Tenant t) => new TenantDetailsDto
+    private TenantDetailsDto MapToDetailsDto(ERP.Master.Models.Tenant t) => new TenantDetailsDto
     {
         Id = t.Id,
         Name = t.Name,
@@ -297,127 +297,13 @@ public class TenantsController : BaseController
     private string GetTenantConnectionString(string dbName) =>
         "Host=erp-db;Port=5432;Database=" + dbName + ";Username=postgres;Password=postgres";
 
-    private async Task CreateTenantAdminUserAsync(Tenant tenant, CreateTenantUserRequest adminUser)
+    private async Task CreateTenantAdminUserAsync(ERP.Master.Models.Tenant tenant, CreateTenantUserRequest adminUser)
     {
         // Implementation for creating admin user
     }
 
-    private async Task CreateTenantSubscriptionAsync(Tenant tenant, CreateSubscriptionRequest subscription)
+    private async Task CreateTenantSubscriptionAsync(ERP.Master.Models.Tenant tenant, CreateSubscriptionRequest subscription)
     {
         // Implementation for creating subscription
-    }
-}
-
-public static class TenantDtos
-{
-    public class GetTenantsRequest
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Cnpj { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public TenantStatus? Status { get; set; }
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 20;
-    }
-
-    public class TenantDto
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Cnpj { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public TenantStatus Status { get; set; }
-        public string DbName { get; set; } = string.Empty;
-        public int? MaxUsers { get; set; }
-        public long? MaxStorage { get; set; }
-        public long CurrentStorage { get; set; }
-        public DateTime? TrialEnd { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public SubscriptionDto Subscription { get; set; } = null;
-    }
-
-    public class TenantDetailsDto : TenantDto
-    {
-        public string ConnectionString { get; set; } = string.Empty;
-        public List<string> EnabledModules { get; set; } = new List<string>();
-        public Dictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
-        public List<TenantUserDto> Users { get; set; } = new List<TenantUserDto>();
-    }
-
-    public class TenantUserDto
-    {
-        public Guid Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public UserStatus Status { get; set; }
-        public bool TwoFactorEnabled { get; set; }
-        public DateTime? LastLogin { get; set; }
-    }
-
-    public class SubscriptionDto
-    {
-        public Guid Id { get; set; }
-        public Guid PlanId { get; set; }
-        public string PlanName { get; set; } = string.Empty;
-        public SubscriptionStatus Status { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public DateTime? TrialStart { get; set; }
-        public DateTime? TrialEnd { get; set; }
-        public string PaymentMethod { get; set; } = string.Empty;
-        public string PaymentStatus { get; set; } = string.Empty;
-        public int? MaxUsers { get; set; }
-        public int? MaxFilials { get; set; }
-        public long? MaxStorage { get; set; }
-    }
-
-    public class CreateTenantRequest
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Cnpj { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public TenantStatus Status { get; set; } = TenantStatus.Active;
-        public int? MaxUsers { get; set; }
-        public long? MaxStorage { get; set; }
-        public int? TrialDays { get; set; }
-        public List<string> EnabledModules { get; set; } = new List<string>();
-        public Dictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
-        public CreateTenantUserRequest AdminUser { get; set; } = null;
-        public CreateSubscriptionRequest Subscription { get; set; } = null;
-    }
-
-    public class CreateTenantUserRequest
-    {
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public List<string> Roles { get; set; } = new List<string>();
-    }
-
-    public class CreateSubscriptionRequest
-    {
-        public Guid PlanId { get; set; }
-        public DateTime StartDate { get; set; } = DateTime.UtcNow;
-        public int? TrialDays { get; set; }
-        public Dictionary<string, bool> Modules { get; set; } = new Dictionary<string, bool>();
-    }
-
-    public class UpdateTenantRequest
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public TenantStatus? Status { get; set; }
-        public int? MaxUsers { get; set; }
-        public long? MaxStorage { get; set; }
-        public List<string> EnabledModules { get; set; } = new List<string>();
-        public Dictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
     }
 }

@@ -2,14 +2,16 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ERP.Shared.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP.Master.Models;
 
 /// <summary>
 /// Representa um token de usuário (refresh token, reset password, etc.)
+/// Estende o IdentityUserToken para compatibilidade com o IdentityDbContext
 /// </summary>
 [Table("user_tokens")]
-public class UserToken : IEntity<Guid>
+public class UserToken : IdentityUserToken<Guid>, IEntity<Guid>
 {
     /// <summary>
     /// ID
@@ -19,14 +21,7 @@ public class UserToken : IEntity<Guid>
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
-    /// ID do usuário
-    /// </summary>
-    [Required]
-    [Column("user_id")]
-    public Guid UserId { get; set; }
-
-    /// <summary>
-    /// Usuário
+    /// Usuário (UserId é herdado do IdentityUserToken)
     /// </summary>
     [ForeignKey("UserId")]
     public virtual User User { get; set; } = null!;

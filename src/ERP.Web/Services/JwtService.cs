@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ERP.Master.Models;
+using ERP.Shared.Constants;
 using ERP.Shared.Exceptions;
 using ERP.Shared.Interfaces;
 using ERP.Shared.Settings;

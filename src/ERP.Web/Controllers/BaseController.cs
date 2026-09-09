@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ERP.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -163,7 +164,7 @@ public class BaseController : ControllerBase
     /// <returns>NotFoundObjectResult</returns>
     protected IActionResult NotFound(string message = "Resource not found")
     {
-        return NotFound(new ApiResponse
+        return base.NotFound(new ApiResponse
         {
             Success = false,
             Message = message,
@@ -178,7 +179,7 @@ public class BaseController : ControllerBase
     /// <returns>UnauthorizedObjectResult</returns>
     protected IActionResult Unauthorized(string message = "Unauthorized access")
     {
-        return Unauthorized(new ApiResponse
+        return base.Unauthorized(new ApiResponse
         {
             Success = false,
             Message = message,
@@ -193,7 +194,7 @@ public class BaseController : ControllerBase
     /// <returns>ForbidResult</returns>
     protected IActionResult Forbidden(string message = "Forbidden: You do not have permission")
     {
-        return Forbid(new ApiResponse
+        return StatusCode(StatusCodes.Status403Forbidden, new ApiResponse
         {
             Success = false,
             Message = message,

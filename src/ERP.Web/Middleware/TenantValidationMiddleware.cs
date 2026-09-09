@@ -104,14 +104,14 @@ public class TenantValidationMiddleware
     /// <param name="context">Contexto HTTP</param>
     /// <param name="tenantContext">Contexto do tenant</param>
     /// <returns>Tenant ou null</returns>
-    private async Task<Tenant?> ValidateTenantAsync(HttpContext context, TenantContext tenantContext)
+    private async Task<ERP.Master.Models.Tenant?> ValidateTenantAsync(HttpContext context, TenantContext tenantContext)
     {
         try
         {
             // Obter o MasterDbContext
             var dbContext = context.RequestServices.GetRequiredService<MasterDbContext>();
 
-            Tenant? tenant = null;
+            ERP.Master.Models.Tenant? tenant = null;
 
             // Buscar por ID
             if (tenantContext.TenantId.HasValue)
