@@ -1,0 +1,47 @@
+services:
+  # Banco PostgreSQL global (ERP_MASTER)
+  db:
+    image: postgres:15-alpine
+    container_name: erp-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=erp_master
+    ports:
+      - "5432:5432"
+    volumes:
+      - erp-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d erp_master"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  # API (.NET 8) rodando do código-fonte com hot reload
+  web:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: erp-web
+    restart: unless-stopped
+    working_dir: /src
+    command: >
+      bash -c "dotnet restore ERP.SaaS.sln --verbosity quiet
+      && dotnet watch run --project src/ERP.Web/ERP.Web.csproj --no-launch-profile --no-restore"
+    ports:
+      - "3000:3000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:3000
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - ConnectionStrings__MasterConnection=Host=db;Port=5432;Database=erp_master;Username=postgres;Password=postgres
+      - AppSettings__Database__MasterConnectionString=Host=db;Port=5432;Database=erp_master;Username=postgres;Password=postgres
+    volumes:
+      - .:/src
+      - nuget-cache:/root/.nuget/packages
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  erp-db-data:
+  nuget-cache:

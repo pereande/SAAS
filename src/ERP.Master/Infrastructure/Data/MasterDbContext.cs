@@ -149,6 +149,35 @@ public class MasterDbContext : IdentityDbContext<User, Role, Guid, UserClaim, Us
             b.HasKey(t => t.Id);
             b.HasIndex(ut => new { ut.UserId, ut.LoginProvider, ut.Name }).IsUnique().HasDatabaseName("ix_user_tokens_user_id_login_provider_name");
         });
+
+        // Liga as navegações User.UserRoles/UserRole.User e UserToken.User à FK
+        // UserId já criada pelo Identity — sem isso o EF cria uma segunda FK
+        // shadow (user_id1) nas tabelas user_roles e user_tokens
+        modelBuilder.Entity<User>(b =>
+        {
+            b.HasMany(u => u.UserRoles)
+                .WithOne(ur => ur.User)
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Idem para Role.UserRoles/UserRole.Role — sem isso o EF cria a FK
+        // shadow (role_id1) em user_roles
+        modelBuilder.Entity<Role>(b =>
+        {
+            b.HasMany(r => r.UserRoles)
+                .WithOne(ur => ur.Role)
+                .HasForeignKey(ur => ur.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<UserToken>(b =>
+        {
+            b.HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 
     /// <summary>

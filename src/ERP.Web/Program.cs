@@ -1,6 +1,7 @@
 using System.Text;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
+using ERP.Shared.Interfaces;
 using ERP.Shared.Settings;
 using ERP.Web.Middleware;
 using ERP.Web.Services;
@@ -138,6 +139,9 @@ try
 
     // HttpClient
     builder.Services.AddHttpClient();
+
+    // Repositories
+    builder.Services.AddScoped(typeof(IRepository<,>), typeof(ERP.Web.Repositories.Repository<,>));
 
     // Services
     builder.Services.AddScoped<IJwtService, JwtService>();
