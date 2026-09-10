@@ -1,6 +1,7 @@
 using System.Text;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
+using ERP.Tenant.Infrastructure.Data;
 using ERP.Shared.Interfaces;
 using ERP.Shared.Settings;
 using ERP.Web.Middleware;
@@ -48,6 +49,14 @@ try
         options.UseNpgsql(dbSettings.MasterConnectionString);
         options.UseSnakeCaseNamingConvention();
     });
+
+    // HttpContextAccessor (needed to resolve the tenant context inside the factory)
+    builder.Services.AddHttpContextAccessor();
+
+    // Tenant DbContext — resolved per-request from the current tenant's connection string
+    builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
+    builder.Services.AddScoped<TenantDbContext>(sp =>
+        sp.GetRequiredService<ITenantDbContextFactory>().Create());
 
     // Identity
     builder.Services.AddIdentity<User, Role>(options =>
