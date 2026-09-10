@@ -188,6 +188,9 @@ try
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<MasterDbContext>();
         dbContext.Database.Migrate();
+
+        // Seed dos papéis padrão com níveis de acesso
+        await RoleSeeder.SeedAsync(scope.ServiceProvider);
     }
 
     Log.Information("ERP SaaS Web API started successfully");

@@ -2,9 +2,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
+using ERP.Master.Models;
 using ERP.Shared.Constants;
 using ERP.Web.DTOs.Users;
+using ERP.Web.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,15 +22,180 @@ namespace ERP.Web.Controllers;
 public class UsersController : BaseController
 {
     private readonly MasterDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
     private readonly ILogger<UsersController> _logger;
 
     /// <summary>
     /// Construtor
     /// </summary>
-    public UsersController(MasterDbContext dbContext, ILogger<UsersController> logger)
+    public UsersController(MasterDbContext dbContext, UserManager<User> userManager, ILogger<UsersController> logger)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
         _logger = logger;
+    }
+
+    /// <summary>
+    /// Lista os papéis disponíveis com seus níveis de acesso
+    /// </summary>
+    [HttpGet("roles")]
+    public async Task<IActionResult> GetRoles()
+    {
+        try
+        {
+            var roles = await _dbContext.Roles
+                .OrderByDescending(r => r.Level)
+                .ToListAsync();
+
+            return Success(roles.Select(r => new RoleDto
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Description = r.Description,
+                Level = r.Level
+            }));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting roles");
+            return Error(ErrorMessages.InternalServerError);
+        }
+    }
+
+    /// <summary>
+    /// Cria um novo usuário. Sem papéis informados, recebe automaticamente o papel básico "User".
+    /// </summary>
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
+    {
+        try
+        {
+            // Resolver papéis: informados ou o papel básico padrão
+            var roleIds = (request.RoleIds ?? new List<Guid>()).Distinct().ToList();
+            var roles = await _dbContext.Roles
+                .Where(r => roleIds.Contains(r.Id))
+                .ToListAsync();
+
+            if (roleIds.Count > 0 && roles.Count != roleIds.Count)
+                return Error("Um ou mais papéis informados não existem.");
+
+            if (roles.Count == 0)
+            {
+                // Novas contas sem papéis informados recebem automaticamente o papel básico
+                var basicRole = await _dbContext.Roles
+                    .FirstOrDefaultAsync(r => r.NormalizedName == RoleSeeder.BasicRoleName.ToUpper());
+
+                if (basicRole == null)
+                    return Error("Papel básico padrão não encontrado. Execute o seed de papéis.");
+
+                roles.Add(basicRole);
+            }
+
+            var user = new User
+            {
+                UserName = request.UserName,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                TenantId = request.TenantId,
+                Status = UserStatus.Active
+            };
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors
+                    .GroupBy(e => e.Code)
+                    .ToDictionary(g => g.Key, g => g.Select(e => e.Description).ToList());
+                return ValidationError(errors);
+            }
+
+            foreach (var role in roles)
+            {
+                _dbContext.UserRoles.Add(new UserRole { UserId = user.Id, RoleId = role.Id });
+            }
+            await _dbContext.SaveChangesAsync();
+
+            var created = await _dbContext.Users
+                .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+                .Include(u => u.Tenant).ThenInclude(t => t.Subscription).ThenInclude(s => s.Plan)
+                .FirstAsync(u => u.Id == user.Id);
+
+            _logger.LogInformation("Usuário {UserId} criado com papéis: {Roles}", user.Id, string.Join(", ", roles.Select(r => r.Name)));
+
+            return Success(MapToDto(created), "Usuário criado com sucesso");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating user");
+            return Error(ErrorMessages.InternalServerError);
+        }
+    }
+
+    /// <summary>
+    /// Define os papéis de um usuário (substitui os papéis atuais)
+    /// </summary>
+    [HttpPut("{id:guid}/roles")]
+    public async Task<IActionResult> UpdateRoles(Guid id, [FromBody] UpdateUserRolesRequest request)
+    {
+        try
+        {
+            var distinctIds = request.RoleIds.Distinct().ToList();
+
+            if (distinctIds.Count == 0)
+                return Error("O usuário deve ter pelo menos um papel.");
+
+            var user = await _dbContext.Users
+                .Include(u => u.UserRoles)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado");
+
+            var roles = await _dbContext.Roles
+                .Where(r => distinctIds.Contains(r.Id))
+                .ToListAsync();
+
+            if (roles.Count != distinctIds.Count)
+                return Error("Um ou mais papéis informados não existem.");
+
+            // Impedir que o admin remova o próprio papel Admin (evita lockout)
+            var currentUserId = GetCurrentUserId();
+            if (user.Id == currentUserId)
+            {
+                var hadAdmin = user.UserRoles.Any(ur => ur.Role.Name == "Admin");
+                if (hadAdmin && !roles.Any(r => r.Name == "Admin"))
+                    return Error("Você não pode remover seu próprio papel de Admin.");
+            }
+
+            var rolesToRemove = user.UserRoles
+                .Where(ur => !distinctIds.Contains(ur.RoleId))
+                .ToList();
+            _dbContext.UserRoles.RemoveRange(rolesToRemove);
+
+            var currentRoleIds = user.UserRoles.Select(ur => ur.RoleId).ToList();
+            foreach (var roleId in distinctIds.Where(rid => !currentRoleIds.Contains(rid)))
+            {
+                _dbContext.UserRoles.Add(new UserRole { UserId = user.Id, RoleId = roleId });
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("Papéis do usuário {UserId} atualizados para: {Roles}", user.Id,
+                string.Join(", ", roles.Select(r => r.Name)));
+
+            var updated = await _dbContext.Users
+                .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+                .Include(u => u.Tenant).ThenInclude(t => t.Subscription).ThenInclude(s => s.Plan)
+                .FirstAsync(u => u.Id == user.Id);
+
+            return Success(MapToDto(updated), "Papéis atualizados com sucesso");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating user roles");
+            return Error(ErrorMessages.InternalServerError);
+        }
     }
 
     /// <summary>
@@ -103,6 +271,7 @@ public class UsersController : BaseController
             EmailVerified = user.EmailVerified,
             Status = user.Status,
             Roles = user.UserRoles.Select(ur => ur.Role.Name).OrderBy(r => r).ToList(),
+            RoleIds = user.UserRoles.Select(ur => ur.RoleId).ToList(),
             LastLogin = user.LastLogin,
             CreatedAt = user.CreatedAt,
             Tenant = user.Tenant == null ? null : new UserTenantDto

@@ -21,6 +21,12 @@ public class Role : IdentityRole<Guid>, IEntity<Guid>
     public string? Description { get; set; }
 
     /// <summary>
+    /// Nível de acesso (quanto maior, mais privilégios)
+    /// </summary>
+    [Column("level")]
+    public int Level { get; set; } = 10;
+
+    /// <summary>
     /// Data de criação
     /// </summary>
     [Required]

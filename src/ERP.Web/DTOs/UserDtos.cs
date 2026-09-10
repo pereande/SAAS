@@ -36,6 +36,84 @@ public class GetUsersRequest
 }
 
 /// <summary>
+/// DTO de papel com nível de acesso
+/// </summary>
+public class RoleDto
+{
+    /// <summary>
+    /// ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Nome
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Descrição
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Nível de acesso
+    /// </summary>
+    public int Level { get; set; }
+}
+
+/// <summary>
+/// Request de criação de usuário
+/// </summary>
+public class CreateUserRequest
+{
+    /// <summary>
+    /// Primeiro nome
+    /// </summary>
+    public string FirstName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Sobrenome
+    /// </summary>
+    public string LastName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Nome de usuário
+    /// </summary>
+    public string UserName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// E-mail
+    /// </summary>
+    public string Email { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Senha inicial
+    /// </summary>
+    public string Password { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Tenant do usuário (opcional — null para usuário global)
+    /// </summary>
+    public Guid? TenantId { get; set; }
+
+    /// <summary>
+    /// Papéis a atribuir (opcional — sem informar, recebe o papel básico "User")
+    /// </summary>
+    public List<Guid>? RoleIds { get; set; }
+}
+
+/// <summary>
+/// Request de atualização dos papéis de um usuário
+/// </summary>
+public class UpdateUserRolesRequest
+{
+    /// <summary>
+    /// IDs dos papéis que o usuário terá após a atualização
+    /// </summary>
+    public List<Guid> RoleIds { get; set; } = new List<Guid>();
+}
+
+/// <summary>
 /// DTO de usuário para o painel administrativo
 /// </summary>
 public class UserDto
@@ -74,6 +152,11 @@ public class UserDto
     /// Papéis atribuídos
     /// </summary>
     public List<string> Roles { get; set; } = new List<string>();
+
+    /// <summary>
+    /// IDs dos papéis atribuídos
+    /// </summary>
+    public List<Guid> RoleIds { get; set; } = new List<Guid>();
 
     /// <summary>
     /// Último login
