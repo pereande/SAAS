@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ERP.Shared.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP.Master.Models;
 
@@ -9,27 +10,20 @@ namespace ERP.Master.Models;
 /// Representa um token de usuário (refresh token, reset password, etc.)
 /// </summary>
 [Table("user_tokens")]
-public class UserToken : IEntity<Guid>
+public class UserToken : IdentityUserToken<Guid>, IEntity<Guid>
 {
     /// <summary>
     /// ID
     /// </summary>
     [Key]
     [Column("id")]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    /// <summary>
-    /// ID do usuário
-    /// </summary>
-    [Required]
-    [Column("user_id")]
-    public Guid UserId { get; set; }
+    public new Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
     /// Usuário
     /// </summary>
     [ForeignKey("UserId")]
-    public virtual User User { get; set; } = null!;
+    public virtual User? User { get; set; }
 
     /// <summary>
     /// Tipo do token

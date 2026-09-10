@@ -252,13 +252,4 @@ public class TenantDbContext : DbContext
     }
 }
 
-/// <summary>
-/// Interface para entidades que pertence a um tenant
-/// </summary>
-public interface ITenantEntity
-{
-    /// <summary>
-    /// ID do tenant
-    /// </summary>
-    Guid TenantId { get; set; }
-}
+

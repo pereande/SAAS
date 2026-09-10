@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Shared.Constants;
-using ERP.Web.DTOs.Tenants;
+using static ERP.Web.Controllers.TenantDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -59,3 +59,14 @@ public interface IEntity<TKey>
     /// </summary>
     TKey Id { get; set; }
 }
+
+/// <summary>
+/// Interface para entidades que pertencem a um tenant
+/// </summary>
+public interface ITenantEntity
+{
+    /// <summary>
+    /// ID do tenant
+    /// </summary>
+    Guid TenantId { get; set; }
+}

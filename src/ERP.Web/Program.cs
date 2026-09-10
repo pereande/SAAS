@@ -1,6 +1,7 @@
 using System.Text;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
+using ERP.Master.Services;
 using ERP.Shared.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -160,7 +161,7 @@ try
     {
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<MasterDbContext>();
-        dbContext.Database.Migrate();
+        dbContext.Database.EnsureCreated();
     }
 
     Log.Information("ERP SaaS Web API started successfully");
