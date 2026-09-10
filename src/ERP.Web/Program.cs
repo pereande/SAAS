@@ -169,6 +169,9 @@ try
     // 10. Audit logging
     app.UseMiddleware<ExceptionMiddleware>();
     app.UseHttpsRedirection();
+    // Painel administrativo estático (wwwroot)
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
     app.UseRouting();
     app.UseCors("Default");
     app.UseAuthentication();
