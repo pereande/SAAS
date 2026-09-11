@@ -1,5 +1,54 @@
+```
+# Build artifacts
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.jar
+*.war
+*.class
+
+# Dependencies
+packages/
 node_modules/
-.next/
-dist/
-build/
+.nuget/
+.nuget.packages/
+
+# Logs
 *.log
+logs/
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# IDE
+.vscode/
+.idea/
+*.userprefs
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS generated
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test and coverage
+coverage/
+*.cover
+*.log
+*.tmp
+
+# ASP.NET Core
+*.db
+*.db-journal
+appsettings.Production.json
+```
