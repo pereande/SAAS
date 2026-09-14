@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using ERP.Master.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace ERP.Master.Infrastructure.Data;
 /// DbContext principal para o banco ERP_MASTER
 /// Contém todas as tabelas globais da plataforma
 /// </summary>
-public class MasterDbContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
+public class MasterDbContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, IdentityUserToken<Guid>>
 {
     /// <summary>
     /// Construtor
@@ -49,7 +50,7 @@ public class MasterDbContext : IdentityDbContext<User, Role, Guid, UserClaim, Us
     /// <summary>
     /// Tokens de usuário
     /// </summary>
-    public new DbSet<UserToken> UserTokens { get; set; } = null!;
+    public DbSet<UserToken> RefreshTokens { get; set; } = null!;
 
     /// <summary>
     /// Sessões de usuário
@@ -143,12 +144,7 @@ public class MasterDbContext : IdentityDbContext<User, Role, Guid, UserClaim, Us
             b.HasIndex(rc => rc.RoleId).HasDatabaseName("ix_role_claims_role_id");
         });
 
-        modelBuilder.Entity<UserToken>(b =>
-        {
-            b.ToTable("user_tokens");
-            b.HasKey(t => t.Id);
-            b.HasIndex(ut => new { ut.UserId, ut.LoginProvider, ut.Name }).IsUnique().HasDatabaseName("ix_user_tokens_user_id_login_provider_name");
-        });
+        modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("identity_user_tokens");
     }
 
     /// <summary>
@@ -158,6 +154,5 @@ public class MasterDbContext : IdentityDbContext<User, Role, Guid, UserClaim, Us
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Configurar para usar snake_case no PostgreSQL
-        optionsBuilder.UseSnakeCaseNamingConvention();
     }
 }

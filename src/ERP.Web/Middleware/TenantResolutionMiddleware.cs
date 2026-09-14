@@ -5,6 +5,7 @@ using ERP.Master.Infrastructure.Data;
 using ERP.Shared.Exceptions;
 using ERP.Shared.Settings;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -40,27 +41,20 @@ public class TenantResolutionMiddleware
     /// <returns>Task</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        try
+        // Endpoints anônimos, como login e recuperação de acesso, operam no banco master.
+        // Os endpoints protegidos continuam obrigados a fornecer um tenant válido.
+        var tenantContext = ResolveTenant(context);
+
+        if (tenantContext == null && !_settings.AllowDefaultTenant &&
+            context.GetEndpoint()?.Metadata.GetMetadata<IAllowAnonymous>() == null)
         {
-            // Obter o tenant da requisição
-            var tenantContext = ResolveTenant(context);
-
-            if (tenantContext == null && !_settings.AllowDefaultTenant)
-            {
-                throw new BadRequestException("Tenant not specified. Please provide a tenant identifier.");
-            }
-
-            // Adicionar tenant ao contexto HTTP
-            context.Items["TenantContext"] = tenantContext;
-
-            // Chamar o próximo middleware
-            await _next(context);
+            throw new BadRequestException("Tenant not specified. Please provide a tenant identifier.");
         }
-        catch (Exception ex)
-        {
-            // Se o erro não for tratado, propagar
-            throw;
-        }
+
+        // Adicionar tenant ao contexto HTTP
+        context.Items["TenantContext"] = tenantContext;
+
+        await _next(context);
     }
 
     /// <summary>
@@ -75,6 +69,9 @@ public class TenantResolutionMiddleware
         {
             if (Guid.TryParse(tenantIdHeader, out var tenantId))
             {
+                var tokenTenant = context.User?.Claims.FirstOrDefault(c => c.Type == "tenant_id")?.Value;
+                if (Guid.TryParse(tokenTenant, out var tokenTenantId) && tokenTenantId != tenantId)
+                    throw new ForbiddenException("The requested tenant does not match the authenticated tenant.");
                 return new TenantContext { TenantId = tenantId, ResolutionMethod = TenantResolutionMethod.Header };
             }
         }

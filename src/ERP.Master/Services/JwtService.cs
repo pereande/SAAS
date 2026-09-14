@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ERP.Master.Models;
+using ERP.Shared.Constants;
 using ERP.Shared.Exceptions;
 using ERP.Shared.Interfaces;
 using ERP.Shared.Settings;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ERP.Shared.Services;
+namespace ERP.Master.Services;
 
 /// <summary>
 /// Serviço para manipulação de tokens JWT
@@ -311,7 +312,7 @@ public class JwtService : IJwtService
     public async Task<Guid> GetUserIdFromTokenAsync(string token)
     {
         var principal = await ValidateTokenAsync(token);
-        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier) ?:
+        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier) ??
                          principal.FindFirst(JwtRegisteredClaimNames.Sub);
 
         if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))

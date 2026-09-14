@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
+using MasterTenant = ERP.Master.Models.Tenant;
 using ERP.Shared.Exceptions;
 using ERP.Shared.Settings;
 using Microsoft.AspNetCore.Http;
@@ -45,13 +46,6 @@ public class TenantValidationMiddleware
 
         // Se não houver tenant resolvido, pular validação
         if (tenantContext == null || !tenantContext.IsResolved)
-        {
-            await _next(context);
-            return;
-        }
-
-        // Se o tenant for resolvido por token (já autenticado), pular validação
-        if (tenantContext.ResolutionMethod == TenantResolutionMethod.Token)
         {
             await _next(context);
             return;
@@ -109,14 +103,14 @@ public class TenantValidationMiddleware
     /// <param name="context">Contexto HTTP</param>
     /// <param name="tenantContext">Contexto do tenant</param>
     /// <returns>Tenant ou null</returns>
-    private async Task<Tenant?> ValidateTenantAsync(HttpContext context, TenantContext tenantContext)
+    private async Task<MasterTenant?> ValidateTenantAsync(HttpContext context, TenantContext tenantContext)
     {
         try
         {
             // Obter o MasterDbContext
             var dbContext = context.RequestServices.GetRequiredService<MasterDbContext>();
 
-            Tenant? tenant = null;
+            MasterTenant? tenant = null;
 
             // Buscar por ID
             if (tenantContext.TenantId.HasValue)

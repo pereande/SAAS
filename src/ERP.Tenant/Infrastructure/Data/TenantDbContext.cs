@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using ERP.Shared.Models;
 using ERP.Tenant.Models;
@@ -34,6 +35,10 @@ public class TenantDbContext : DbContext
         string tenantName)
         : base(options)
     {
+        if (tenantId == Guid.Empty)
+            throw new ArgumentException("A tenant ID must be a non-empty GUID.", nameof(tenantId));
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(tenantName);
         TenantId = tenantId;
         TenantName = tenantName;
     }
@@ -228,11 +233,14 @@ public class TenantDbContext : DbContext
             var parameter = Expression.Parameter(entityType.ClrType, "e");
             var tenantIdProperty = entityType.FindProperty("TenantId");
             
-            if (tenantIdProperty != null)
+            if (tenantIdProperty?.PropertyInfo is { } propertyInfo)
             {
-                var tenantIdAccess = Expression.Property(parameter, tenantIdProperty.PropertyInfo);
-                var tenantIdConstant = Expression.Constant(TenantId);
-                var tenantIdEqual = Expression.Equal(tenantIdAccess, tenantIdConstant);
+                var tenantIdAccess = Expression.Property(parameter, propertyInfo);
+                // Referenciar a propriedade do contexto, em vez de embutir o valor
+                // atual como constante, permite ao EF parametrizar corretamente o
+                // filtro quando o mesmo modelo é usado por vários tenants.
+                var currentTenant = Expression.Property(Expression.Constant(this), nameof(TenantId));
+                var tenantIdEqual = Expression.Equal(tenantIdAccess, currentTenant);
                 
                 var lambda = Expression.Lambda(tenantIdEqual, parameter);
                 
@@ -242,23 +250,43 @@ public class TenantDbContext : DbContext
     }
 
     /// <summary>
-    /// Configurações adicionais
+    /// Valida o isolamento antes de persistir alterações.
     /// </summary>
-    /// <param name="optionsBuilder">DbContextOptionsBuilder</param>
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        // Configurar para usar snake_case no PostgreSQL
-        optionsBuilder.UseSnakeCaseNamingConvention();
+        ValidateTenantChanges();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
     }
-}
 
-/// <summary>
-/// Interface para entidades que pertence a um tenant
-/// </summary>
-public interface ITenantEntity
-{
     /// <summary>
-    /// ID do tenant
+    /// Valida o isolamento antes de persistir alterações de forma assíncrona.
     /// </summary>
-    Guid TenantId { get; set; }
+    public override Task<int> SaveChangesAsync(
+        bool acceptAllChangesOnSuccess,
+        CancellationToken cancellationToken = default)
+    {
+        ValidateTenantChanges();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void ValidateTenantChanges()
+    {
+        foreach (var entry in ChangeTracker.Entries<ITenantEntity>())
+        {
+            if (entry.State is EntityState.Detached or EntityState.Unchanged)
+                continue;
+
+            if (entry.Entity.TenantId == Guid.Empty && entry.State == EntityState.Added)
+            {
+                entry.Entity.TenantId = TenantId;
+                continue;
+            }
+
+            if (entry.Entity.TenantId != TenantId)
+            {
+                throw new InvalidOperationException(
+                    $"The entity '{entry.Metadata.ClrType.Name}' does not belong to the current tenant.");
+            }
+        }
+    }
 }

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Shared.Constants;
-using ERP.Shared.Services;
-using ERP.Web.DTOs.Auth;
+using ERP.Master.Services;
+using static ERP.Web.Controllers.AuthDtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -542,7 +542,7 @@ public class AuthController : BaseController
     /// <returns>IP do cliente</returns>
     private string GetClientIp()
     {
-        return Request.Headers["X-Forwarded-For"].FirstOrDefault() ?:
+        return Request.Headers["X-Forwarded-For"].FirstOrDefault() ??
                Request.HttpContext.Connection.RemoteIpAddress?.ToString() ??
                "unknown";
     }

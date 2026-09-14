@@ -3,12 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
+using MasterTenant = ERP.Master.Models.Tenant;
 using ERP.Shared.Constants;
-using ERP.Web.DTOs.Tenants;
+using ERP.Shared.Settings;
+using static ERP.Web.Controllers.TenantDtos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace ERP.Web.Controllers;
 
@@ -21,14 +26,25 @@ public class TenantsController : BaseController
 {
     private readonly MasterDbContext _dbContext;
     private readonly ILogger<TenantsController> _logger;
+    private readonly DatabaseSettings _databaseSettings;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<Role> _roleManager;
 
     /// <summary>
     /// Construtor
     /// </summary>
-    public TenantsController(MasterDbContext dbContext, ILogger<TenantsController> logger)
+    public TenantsController(
+        MasterDbContext dbContext,
+        ILogger<TenantsController> logger,
+        IOptions<DatabaseSettings> databaseSettings,
+        UserManager<User> userManager,
+        RoleManager<Role> roleManager)
     {
         _dbContext = dbContext;
         _logger = logger;
+        _databaseSettings = databaseSettings.Value;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     /// <summary>
@@ -125,7 +141,7 @@ public class TenantsController : BaseController
             var dbName = $"erp_tenant_{Guid.NewGuid():N}".ToLower();
             var connectionString = GetTenantConnectionString(dbName);
 
-            var tenant = new Tenant
+            var tenant = new MasterTenant
             {
                 Name = request.Name,
                 Cnpj = request.Cnpj,
@@ -220,7 +236,7 @@ public class TenantsController : BaseController
         }
     }
 
-    private TenantDto MapToDto(Tenant t) => new TenantDto
+    private TenantDto MapToDto(MasterTenant t) => new TenantDto
     {
         Id = t.Id,
         Name = t.Name,
@@ -247,7 +263,7 @@ public class TenantsController : BaseController
         } : null
     };
 
-    private TenantDetailsDto MapToDetailsDto(Tenant t) => new TenantDetailsDto
+    private TenantDetailsDto MapToDetailsDto(MasterTenant t) => new TenantDetailsDto
     {
         Id = t.Id,
         Name = t.Name,
@@ -256,7 +272,6 @@ public class TenantsController : BaseController
         Phone = t.Phone,
         Status = t.Status,
         DbName = t.DbName,
-        ConnectionString = t.ConnectionString,
         MaxUsers = t.MaxUsers,
         MaxStorage = t.MaxStorage,
         CurrentStorage = t.CurrentStorage,
@@ -294,17 +309,74 @@ public class TenantsController : BaseController
         }).ToList()
     };
 
-    private string GetTenantConnectionString(string dbName) =>
-        "Host=erp-db;Port=5432;Database=" + dbName + ";Username=postgres;Password=postgres";
-
-    private async Task CreateTenantAdminUserAsync(Tenant tenant, CreateTenantUserRequest adminUser)
+    private string GetTenantConnectionString(string dbName)
     {
-        // Implementation for creating admin user
+        var builder = new NpgsqlConnectionStringBuilder(_databaseSettings.MasterConnectionString)
+        {
+            Database = dbName,
+            Pooling = true
+        };
+        return builder.ConnectionString;
     }
 
-    private async Task CreateTenantSubscriptionAsync(Tenant tenant, CreateSubscriptionRequest subscription)
+    private async Task CreateTenantAdminUserAsync(MasterTenant tenant, CreateTenantUserRequest adminUser)
     {
-        // Implementation for creating subscription
+        var user = new User
+        {
+            UserName = adminUser.Username,
+            Email = adminUser.Email,
+            PhoneNumber = adminUser.Phone,
+            FirstName = adminUser.FirstName,
+            LastName = adminUser.LastName,
+            TenantId = tenant.Id,
+            EmailVerified = false,
+            Status = UserStatus.Active
+        };
+        var result = await _userManager.CreateAsync(user, adminUser.Password);
+        if (!result.Succeeded)
+            throw new InvalidOperationException($"Could not create tenant administrator: {string.Join(", ", result.Errors.Select(error => error.Description))}");
+
+        var roles = adminUser.Roles.Count == 0 ? new List<string> { "TenantAdmin" } : adminUser.Roles.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        foreach (var roleName in roles)
+        {
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                var roleResult = await _roleManager.CreateAsync(new Role { Name = roleName, IsSystem = false, IsActive = true });
+                if (!roleResult.Succeeded)
+                    throw new InvalidOperationException($"Could not create role '{roleName}': {string.Join(", ", roleResult.Errors.Select(error => error.Description))}");
+            }
+            var addRoleResult = await _userManager.AddToRoleAsync(user, roleName);
+            if (!addRoleResult.Succeeded)
+                throw new InvalidOperationException($"Could not assign role '{roleName}' to tenant administrator.");
+        }
+    }
+
+    private async Task CreateTenantSubscriptionAsync(MasterTenant tenant, CreateSubscriptionRequest subscription)
+    {
+        var plan = await _dbContext.Plans.FindAsync(subscription.PlanId);
+        if (plan == null)
+            throw new InvalidOperationException("The requested subscription plan does not exist.");
+
+        var trialEnd = subscription.TrialDays.HasValue
+            ? subscription.StartDate.AddDays(subscription.TrialDays.Value)
+            : (DateTime?)null;
+        var entity = new Subscription
+        {
+            PlanId = plan.Id,
+            TenantId = tenant.Id,
+            Status = trialEnd.HasValue ? SubscriptionStatus.Trial : SubscriptionStatus.Active,
+            StartDate = subscription.StartDate,
+            TrialStart = trialEnd.HasValue ? subscription.StartDate : null,
+            TrialEnd = trialEnd,
+            MaxUsers = plan.MaxUsers,
+            MaxFilials = plan.MaxFilials,
+            MaxStorage = plan.MaxStorage
+        };
+        await _dbContext.Subscriptions.AddAsync(entity);
+        tenant.SubscriptionId = entity.Id;
+        tenant.PlanId = plan.Id;
+        tenant.TrialEnd = trialEnd;
+        await _dbContext.SaveChangesAsync();
     }
 }
 
@@ -340,7 +412,6 @@ public static class TenantDtos
 
     public class TenantDetailsDto : TenantDto
     {
-        public string ConnectionString { get; set; } = string.Empty;
         public List<string> EnabledModules { get; set; } = new List<string>();
         public Dictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
         public List<TenantUserDto> Users { get; set; } = new List<TenantUserDto>();
@@ -391,6 +462,17 @@ public static class TenantDtos
         public CreateSubscriptionRequest Subscription { get; set; } = null;
     }
 
+    public class UpdateTenantRequest
+    {
+        public string? Name { get; set; }
+        public string? Phone { get; set; }
+        public TenantStatus? Status { get; set; }
+        public int? MaxUsers { get; set; }
+        public long? MaxStorage { get; set; }
+        public List<string>? EnabledModules { get; set; }
+        public Dictionary<string, string>? Settings { get; set; }
+    }
+
     public class CreateTenantUserRequest
     {
         public string Username { get; set; } = string.Empty;
@@ -410,14 +492,4 @@ public static class TenantDtos
         public Dictionary<string, bool> Modules { get; set; } = new Dictionary<string, bool>();
     }
 
-    public class UpdateTenantRequest
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public TenantStatus? Status { get; set; }
-        public int? MaxUsers { get; set; }
-        public long? MaxStorage { get; set; }
-        public List<string> EnabledModules { get; set; } = new List<string>();
-        public Dictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
-    }
 }

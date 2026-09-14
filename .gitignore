@@ -1,6 +1,6 @@
 # Dependencies
-/bin/
-/obj/
+**/bin/
+**/obj/
 
 # User secrets
 /appsettings.Development.json
@@ -27,8 +27,8 @@ Logs/
 Thumbs.db
 
 # Test results
-/TestResults/
-/coverage/
+**/TestResults/
+**/coverage/
 
 # Local database
 *.db
