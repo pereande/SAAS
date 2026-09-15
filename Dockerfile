@@ -10,7 +10,7 @@ COPY ["src/ERP.Tenant/ERP.Tenant.csproj", "./src/ERP.Tenant/"]
 COPY ["src/ERP.Web/ERP.Web.csproj", "./src/ERP.Web/"]
 
 # Restaurar dependências
-RUN dotnet restore "ERP.SaaS.sln"
+RUN dotnet restore "src/ERP.Web/ERP.Web.csproj"
 
 # Copiar o resto do código
 COPY . .
