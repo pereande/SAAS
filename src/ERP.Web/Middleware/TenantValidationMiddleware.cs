@@ -20,6 +20,7 @@ public class TenantValidationMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly MultiTenancySettings _settings;
+    private readonly ILogger<TenantValidationMiddleware> _logger;
 
     /// <summary>
     /// Construtor
@@ -28,10 +29,12 @@ public class TenantValidationMiddleware
     /// <param name="settings">Configurações de multi-tenancy</param>
     public TenantValidationMiddleware(
         RequestDelegate next,
-        IOptions<MultiTenancySettings> settings)
+        IOptions<MultiTenancySettings> settings,
+        ILogger<TenantValidationMiddleware> logger)
     {
         _next = next;
         _settings = settings.Value;
+        _logger = logger;
     }
 
     /// <summary>
@@ -53,6 +56,13 @@ public class TenantValidationMiddleware
 
         // Validar tenant no banco de dados
         var tenant = await ValidateTenantAsync(context, tenantContext);
+
+        _logger.LogInformation(
+            "Tenant validation: RequestedTenantId={RequestedTenantId}, Found={Found}, Status={Status}, Path={Path}",
+            tenantContext.TenantId,
+            tenant is not null,
+            tenant?.Status.ToString() ?? "NotFound",
+            context.Request.Path.Value);
 
         if (tenant == null)
         {
@@ -132,9 +142,11 @@ public class TenantValidationMiddleware
         }
         catch (Exception ex)
         {
-            // Logar erro e continuar
-            var logger = context.RequestServices.GetService<ILogger<TenantValidationMiddleware>>();
-            logger?.LogError(ex, "Error validating tenant");
+            _logger.LogError(ex,
+                "Error validating tenant: RequestedTenantId={RequestedTenantId}, RequestedTenantName={RequestedTenantName}, Path={Path}",
+                tenantContext.TenantId,
+                tenantContext.TenantName,
+                context.Request.Path.Value);
             return null;
         }
     }

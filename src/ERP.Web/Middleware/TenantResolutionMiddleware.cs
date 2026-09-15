@@ -20,6 +20,7 @@ public class TenantResolutionMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly MultiTenancySettings _settings;
+    private readonly ILogger<TenantResolutionMiddleware> _logger;
 
     /// <summary>
     /// Construtor
@@ -28,10 +29,12 @@ public class TenantResolutionMiddleware
     /// <param name="settings">Configurações de multi-tenancy</param>
     public TenantResolutionMiddleware(
         RequestDelegate next,
-        IOptions<MultiTenancySettings> settings)
+        IOptions<MultiTenancySettings> settings,
+        ILogger<TenantResolutionMiddleware> logger)
     {
         _next = next;
         _settings = settings.Value;
+        _logger = logger;
     }
 
     /// <summary>
@@ -44,6 +47,14 @@ public class TenantResolutionMiddleware
         // Endpoints anônimos, como login e recuperação de acesso, operam no banco master.
         // Os endpoints protegidos continuam obrigados a fornecer um tenant válido.
         var tenantContext = ResolveTenant(context);
+
+        _logger.LogInformation(
+            "Tenant resolution: Method={Method}, HeaderPresent={HeaderPresent}, HeaderValid={HeaderValid}, TenantId={TenantId}, Path={Path}",
+            tenantContext?.ResolutionMethod.ToString() ?? "None",
+            context.Request.Headers.ContainsKey(_settings.TenantHeader),
+            tenantContext?.TenantId.HasValue == true,
+            tenantContext?.TenantId,
+            context.Request.Path.Value);
 
         if (tenantContext == null && !_settings.AllowDefaultTenant &&
             context.GetEndpoint()?.Metadata.GetMetadata<IAllowAnonymous>() == null)
@@ -74,6 +85,11 @@ public class TenantResolutionMiddleware
                     throw new ForbiddenException("The requested tenant does not match the authenticated tenant.");
                 return new TenantContext { TenantId = tenantId, ResolutionMethod = TenantResolutionMethod.Header };
             }
+
+            _logger.LogWarning(
+                "Tenant header was present but invalid: HeaderName={HeaderName}, Path={Path}",
+                _settings.TenantHeader,
+                context.Request.Path.Value);
         }
 
         // 2. Verificar subdomínio (se habilitado)
