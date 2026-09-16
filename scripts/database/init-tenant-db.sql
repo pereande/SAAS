@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS public.clients (
     tenant_id UUID NOT NULL,
     person_id UUID NOT NULL REFERENCES public.people(id) ON DELETE CASCADE,
     code VARCHAR(20) NOT NULL,
+    company_name VARCHAR(200),
     credit_limit DECIMAL(18,2),
     payment_days INTEGER,
     payment_term_id UUID,

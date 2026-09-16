@@ -197,6 +197,13 @@ public class Client : BaseEntity<Guid>, ITenantEntity
     public string Code { get; set; } = string.Empty;
 
     /// <summary>
+    /// Nome da empresa associada ao cliente, quando informado
+    /// </summary>
+    [Column("company_name")]
+    [StringLength(200)]
+    public string? CompanyName { get; set; }
+
+    /// <summary>
     /// Limite de crédito
     /// </summary>
     [Column("credit_limit")]

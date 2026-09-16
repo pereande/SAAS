@@ -19,8 +19,8 @@ public sealed class ClientsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ClientResponse>>> GetAll(CancellationToken cancellationToken)
     {
         var clients = await _db.Clients.AsNoTracking().Include(c => c.Person)
-            .OrderBy(c => c.Person.Name).Select(c => ToResponse(c)).ToListAsync(cancellationToken);
-        return Ok(clients);
+            .OrderBy(c => c.Person.Name).ToListAsync(cancellationToken);
+        return Ok(clients.Select(ToResponse));
     }
 
     [HttpPost]
@@ -32,7 +32,7 @@ public sealed class ClientsController : ControllerBase
 
         await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
         var person = new Person { Name = request.Name.Trim(), Email = request.Email.Trim(), Phone = request.Phone?.Trim(), IsActive = true };
-        var client = new Client { Person = person, Code = string.IsNullOrWhiteSpace(request.Code) ? $"CLI-{Guid.NewGuid():N}"[..12].ToUpperInvariant() : request.Code.Trim(), IsActive = true };
+        var client = new Client { Person = person, CompanyName = string.IsNullOrWhiteSpace(request.Company) ? null : request.Company.Trim(), Code = string.IsNullOrWhiteSpace(request.Code) ? $"CLI-{Guid.NewGuid():N}"[..12].ToUpperInvariant() : request.Code.Trim(), IsActive = true };
         _db.Add(client);
         await _db.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -52,6 +52,7 @@ public sealed class ClientsController : ControllerBase
         var client = await _db.Clients.Include(c => c.Person).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         if (client is null) return NotFound();
         client.Person.Name = request.Name.Trim(); client.Person.Email = request.Email.Trim(); client.Person.Phone = request.Phone?.Trim();
+        client.CompanyName = string.IsNullOrWhiteSpace(request.Company) ? null : request.Company.Trim();
         client.Code = string.IsNullOrWhiteSpace(request.Code) ? client.Code : request.Code.Trim();
         client.UpdatedAt = DateTime.UtcNow; client.Person.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync(cancellationToken);
@@ -68,11 +69,11 @@ public sealed class ClientsController : ControllerBase
         return NoContent();
     }
 
-    private static ClientResponse ToResponse(Client client) => new(client.Id, client.Code, client.Person.Name, client.Person.Email ?? "", client.Person.Phone ?? "", client.IsActive ? "Ativo" : "Pendente");
+    private static ClientResponse ToResponse(Client client) => new(client.Id, client.Code, client.Person.Name, client.Person.Email ?? "", client.Person.Phone ?? "", client.CompanyName, client.IsActive ? "Ativo" : "Pendente");
 }
 
 public sealed record ClientRequest(string Name, string Email, string? Phone, string? Company, string? Code = null);
-public sealed record ClientResponse(Guid Id, string Code, string Name, string Email, string Phone, string Status);
+public sealed record ClientResponse(Guid Id, string Code, string Name, string Email, string Phone, string? Company, string Status);
 
 [Authorize]
 [ApiController]
@@ -86,8 +87,9 @@ public sealed class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAll(CancellationToken cancellationToken)
     {
-        var products = await _db.Products.AsNoTracking().OrderBy(p => p.Name).Select(p => ToResponse(p)).ToListAsync(cancellationToken);
-        return Ok(products);
+        var products = await _db.Products.AsNoTracking().Include(p => p.Category).Include(p => p.Inventories)
+            .Where(p => p.IsActive).OrderBy(p => p.Name).ToListAsync(cancellationToken);
+        return Ok(products.Select(ToResponse));
     }
 
     [HttpPost]
@@ -97,8 +99,18 @@ public sealed class ProductsController : ControllerBase
         var code = string.IsNullOrWhiteSpace(request.Code) ? request.Sku : request.Code;
         if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(request.Name)) return BadRequest("Nome e SKU são obrigatórios.");
         if (await _db.Products.AnyAsync(p => p.Code == code && p.IsActive, cancellationToken)) return Conflict("Já existe um produto ativo com este SKU.");
-        var product = new Product { Code = code.Trim(), Name = request.Name.Trim(), SalePrice = request.Price, ProductType = ProductType.Product, UnitOfMeasure = "UN", IsActive = true, ManageStock = true, AllowSaleWithoutStock = false };
+        var branch = await _db.Branches.AsNoTracking().FirstOrDefaultAsync(b => b.IsHeadquarters && b.IsActive, cancellationToken);
+        if (branch is null) return BadRequest("Cadastre uma filial principal antes de adicionar produtos ao estoque.");
+        ProductCategory? category = null;
+        if (!string.IsNullOrWhiteSpace(request.Category))
+        {
+            category = await _db.ProductCategories.FirstOrDefaultAsync(c => c.Name == request.Category.Trim() && c.IsActive, cancellationToken);
+            if (category is null) category = new ProductCategory { Name = request.Category.Trim(), IsActive = true };
+        }
+        var product = new Product { Code = code.Trim(), Name = request.Name.Trim(), Category = category, SalePrice = request.Price, ProductType = ProductType.Product, UnitOfMeasure = "UN", IsActive = true, ManageStock = true, AllowSaleWithoutStock = false };
         _db.Products.Add(product);
+        await _db.SaveChangesAsync(cancellationToken);
+        _db.Inventories.Add(new Inventory { ProductId = product.Id, BranchId = branch.Id, Quantity = request.Stock, ReservedQuantity = 0, IsActive = true });
         await _db.SaveChangesAsync(cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = product.Id }, ToResponse(product));
     }
@@ -106,7 +118,7 @@ public sealed class ProductsController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ProductResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        var product = await _db.Products.AsNoTracking().Include(p => p.Category).Include(p => p.Inventories).FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         return product is null ? NotFound() : Ok(ToResponse(product));
     }
 
@@ -120,8 +132,8 @@ public sealed class ProductsController : ControllerBase
         return NoContent();
     }
 
-    private static ProductResponse ToResponse(Product product) => new(product.Id, product.Code, product.Name, product.SalePrice ?? 0, product.IsActive);
+    private static ProductResponse ToResponse(Product product) => new(product.Id, product.Code, product.Name, product.Category?.Name, product.SalePrice ?? 0, product.Inventories.Where(i => i.IsActive).Sum(i => i.Quantity), product.IsActive);
 }
 
 public sealed record ProductRequest(string Name, string Sku, string? Category, decimal Price, int Stock, string? Code = null);
-public sealed record ProductResponse(Guid Id, string Sku, string Name, decimal Price, bool Active);
+public sealed record ProductResponse(Guid Id, string Sku, string Name, string? Category, decimal Price, decimal Stock, bool Active);
