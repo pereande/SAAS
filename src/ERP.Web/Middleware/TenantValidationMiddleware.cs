@@ -50,13 +50,6 @@ public class TenantValidationMiddleware
             return;
         }
 
-        // Se o tenant for resolvido por token (já autenticado), pular validação
-        if (tenantContext.ResolutionMethod == TenantResolutionMethod.Token)
-        {
-            await _next(context);
-            return;
-        }
-
         // Validar tenant no banco de dados
         var tenant = await ValidateTenantAsync(context, tenantContext);
 

@@ -16,7 +16,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=5001
-      - ConnectionStrings__MasterConnection=Host=erp-db;Port=5432;Database=erp_master;Username=postgres;Password=postgres
+      - AppSettings__Database__MasterConnectionString=Host=erp-db;Port=5432;Database=erp_master;Username=postgres;Password=postgres
     depends_on:
       - erp-db
     networks:

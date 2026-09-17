@@ -2,6 +2,7 @@ using System.Text;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Shared.Settings;
+using ERP.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -149,10 +150,16 @@ try
         app.UseSwaggerUI();
     }
 
+    app.UseMiddleware<ExceptionMiddleware>();
     app.UseHttpsRedirection();
     app.UseCors("Default");
+    app.UseRouting();
     app.UseAuthentication();
+    app.UseTenantResolution();
+    app.UseTenantValidation();
+    app.UseAuthorizationMiddleware();
     app.UseAuthorization();
+    app.UseAuditLogging();
     app.MapControllers();
 
     // Aplicar migrations no startup (apenas em desenvolvimento)
