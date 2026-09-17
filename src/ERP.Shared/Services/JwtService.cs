@@ -311,7 +311,7 @@ public class JwtService : IJwtService
     public async Task<Guid> GetUserIdFromTokenAsync(string token)
     {
         var principal = await ValidateTokenAsync(token);
-        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier) ?:
+        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier) ??
                          principal.FindFirst(JwtRegisteredClaimNames.Sub);
 
         if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
