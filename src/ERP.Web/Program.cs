@@ -1,7 +1,9 @@
 using System.Text;
+using ERP.Master.Infrastructure;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Master.Services;
+using ERP.Shared.Interfaces;
 using ERP.Shared.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
