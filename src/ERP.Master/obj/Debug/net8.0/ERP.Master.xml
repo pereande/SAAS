@@ -96,6 +96,13 @@
             </summary>
             <param name="optionsBuilder">DbContextOptionsBuilder</param>
         </member>
+        <member name="T:ERP.Master.Infrastructure.Repository`2">
+            <summary>
+            Implementação genérica de repositório usando EF Core
+            </summary>
+            <typeparam name="TEntity">Tipo da entidade</typeparam>
+            <typeparam name="TKey">Tipo do ID</typeparam>
+        </member>
         <member name="T:ERP.Master.Models.AuditLog">
             <summary>
             Representa um log de auditoria do sistema
