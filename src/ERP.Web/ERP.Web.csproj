@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>true</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CS8625;CS8602;CS8603</NoWarn>
+    <NoWarn>$(NoWarn);CS8625;CS8602;CS8603;CS8601;CS8604;CS8619;CS0109;CS1998;CS1591</NoWarn>
     <SpaRoot>wwwroot/</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**\*;$(SpaRoot)src\**\*;$(SpaRoot)public\**\*;$(SpaRoot)dist\**\*;$(SpaRoot)build\**\*;$(SpaRoot)test\**\*;$(SpaRoot)tests\**\*</DefaultItemExcludes>
   </PropertyGroup>

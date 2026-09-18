@@ -56,7 +56,7 @@ public class TenantResolutionMiddleware
             // Chamar o próximo middleware
             await _next(context);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Se o erro não for tratado, propagar
             throw;

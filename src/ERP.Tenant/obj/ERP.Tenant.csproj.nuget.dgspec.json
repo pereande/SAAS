@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/src/src/ERP.Tenant/ERP.Tenant.csproj": {}
+    "/app/src/ERP.Tenant/ERP.Tenant.csproj": {}
   },
   "projects": {
-    "/src/src/ERP.Shared/ERP.Shared.csproj": {
+    "/app/src/ERP.Shared/ERP.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/src/src/ERP.Shared/ERP.Shared.csproj",
+        "projectUniqueName": "/app/src/ERP.Shared/ERP.Shared.csproj",
         "projectName": "ERP.Shared",
-        "projectPath": "/src/src/ERP.Shared/ERP.Shared.csproj",
+        "projectPath": "/app/src/ERP.Shared/ERP.Shared.csproj",
         "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/src/src/ERP.Shared/obj/",
+        "outputPath": "/app/src/ERP.Shared/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/root/.nuget/NuGet/NuGet.Config"
@@ -111,14 +111,14 @@
         }
       }
     },
-    "/src/src/ERP.Tenant/ERP.Tenant.csproj": {
+    "/app/src/ERP.Tenant/ERP.Tenant.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/src/src/ERP.Tenant/ERP.Tenant.csproj",
+        "projectUniqueName": "/app/src/ERP.Tenant/ERP.Tenant.csproj",
         "projectName": "ERP.Tenant",
-        "projectPath": "/src/src/ERP.Tenant/ERP.Tenant.csproj",
+        "projectPath": "/app/src/ERP.Tenant/ERP.Tenant.csproj",
         "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/src/src/ERP.Tenant/obj/",
+        "outputPath": "/app/src/ERP.Tenant/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/root/.nuget/NuGet/NuGet.Config"
@@ -133,8 +133,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/src/src/ERP.Shared/ERP.Shared.csproj": {
-                "projectPath": "/src/src/ERP.Shared/ERP.Shared.csproj"
+              "/app/src/ERP.Shared/ERP.Shared.csproj": {
+                "projectPath": "/app/src/ERP.Shared/ERP.Shared.csproj"
               }
             }
           }
@@ -152,6 +152,10 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[12.0.1, )"
+            },
+            "EFCore.NamingConventions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "FluentValidation": {
               "target": "Package",

@@ -1,0 +1,3691 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ERP.Tenant</name>
+    </assembly>
+    <members>
+        <member name="T:ERP.Tenant.Infrastructure.Data.TenantDbContext">
+            <summary>
+            DbContext para os bancos de dados dos tenants (ERP_EMPRESA_XXX)
+            Cada tenant tem seu próprio banco de dados com estas tabelas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.TenantId">
+            <summary>
+            ID do tenant atual
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.TenantName">
+            <summary>
+            Nome do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Tenant.Infrastructure.Data.TenantDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ERP.Tenant.Infrastructure.Data.TenantDbContext},System.Guid,System.String)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="options">Opções do DbContext</param>
+            <param name="tenantId">ID do tenant</param>
+            <param name="tenantName">Nome do tenant</param>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Companies">
+            <summary>
+            Empresas (dados da empresa do tenant)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Branches">
+            <summary>
+            Filiais
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.People">
+            <summary>
+            Pessoas (clientes, fornecedores, funcionários)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Clients">
+            <summary>
+            Clientes
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Suppliers">
+            <summary>
+            Fornecedores
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Employees">
+            <summary>
+            Funcionários
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.ProductCategories">
+            <summary>
+            Categorias de produtos
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Brands">
+            <summary>
+            Marcas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Products">
+            <summary>
+            Produtos
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Inventories">
+            <summary>
+            Estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.InventoryMovements">
+            <summary>
+            Movimentações de estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Sales">
+            <summary>
+            Vendas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.SaleItems">
+            <summary>
+            Itens de venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Purchases">
+            <summary>
+            Compras
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.PurchaseItems">
+            <summary>
+            Itens de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.AccountsPayable">
+            <summary>
+            Contas a pagar
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.AccountsReceivable">
+            <summary>
+            Contas a receber
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.PaymentMethods">
+            <summary>
+            Formas de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.PaymentTerms">
+            <summary>
+            Condições de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Banks">
+            <summary>
+            Bancos
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.BankAccounts">
+            <summary>
+            Contas bancárias
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.FinancialEntries">
+            <summary>
+            Lançamentos financeiros
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.CostCenters">
+            <summary>
+            Centros de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.FiscalNotes">
+            <summary>
+            Notas fiscais de saída
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.FiscalNoteItems">
+            <summary>
+            Itens de nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Cfops">
+            <summary>
+            CFOP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Ncms">
+            <summary>
+            NCM
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Csts">
+            <summary>
+            CST (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Infrastructure.Data.TenantDbContext.Csosns">
+            <summary>
+            CSOSN (ICMS)
+            </summary>
+        </member>
+        <member name="M:ERP.Tenant.Infrastructure.Data.TenantDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configuração da entidade
+            </summary>
+            <param name="modelBuilder">ModelBuilder</param>
+        </member>
+        <member name="M:ERP.Tenant.Infrastructure.Data.TenantDbContext.ConfigureSchema(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configura o schema do banco
+            </summary>
+            <param name="modelBuilder">ModelBuilder</param>
+        </member>
+        <member name="M:ERP.Tenant.Infrastructure.Data.TenantDbContext.AddTenantFilter(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Adiciona filtro global para tenant
+            </summary>
+            <param name="modelBuilder">ModelBuilder</param>
+        </member>
+        <member name="M:ERP.Tenant.Infrastructure.Data.TenantDbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
+            <summary>
+            Configurações adicionais
+            </summary>
+            <param name="optionsBuilder">DbContextOptionsBuilder</param>
+        </member>
+        <member name="T:ERP.Tenant.Models.Branch">
+            <summary>
+            Representa uma filial da empresa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.CompanyId">
+            <summary>
+            ID da empresa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Company">
+            <summary>
+            Empresa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Code">
+            <summary>
+            Código da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Name">
+            <summary>
+            Nome da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Cnpj">
+            <summary>
+            CNPJ da filial (se diferente da matriz)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.StateRegistration">
+            <summary>
+            IE da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.MunicipalRegistration">
+            <summary>
+            IM da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Email">
+            <summary>
+            E-mail
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Phone">
+            <summary>
+            Telefone
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.ZipCode">
+            <summary>
+            CEP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Address">
+            <summary>
+            Endereço
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.AddressNumber">
+            <summary>
+            Número
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.AddressComplement">
+            <summary>
+            Complemento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Neighborhood">
+            <summary>
+            Bairro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.City">
+            <summary>
+            Cidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.State">
+            <summary>
+            Estado
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Country">
+            <summary>
+            País
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.IsHeadquarters">
+            <summary>
+            Filial matriz
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.InvoiceSequence">
+            <summary>
+            Sequência de notas fiscais
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.SaleSequence">
+            <summary>
+            Sequência de pedidos de venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.PurchaseSequence">
+            <summary>
+            Sequência de pedidos de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Inventories">
+            <summary>
+            Estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Sales">
+            <summary>
+            Vendas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Purchases">
+            <summary>
+            Compras
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.Employees">
+            <summary>
+            Funcionários
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Branch.BankAccounts">
+            <summary>
+            Contas bancárias
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Company">
+            <summary>
+            Representa os dados da empresa do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.TenantId">
+            <summary>
+            ID do tenant (chave estrangeira)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.CorporateName">
+            <summary>
+            Razão social
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.TradeName">
+            <summary>
+            Nome fantasia
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Cnpj">
+            <summary>
+            CNPJ
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.StateRegistration">
+            <summary>
+            IE (Inscrição Estadual)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.MunicipalRegistration">
+            <summary>
+            IM (Inscrição Municipal)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.TaxRegime">
+            <summary>
+            Regime tributário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.OpeningDate">
+            <summary>
+            Data de abertura
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Email">
+            <summary>
+            E-mail principal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Phone">
+            <summary>
+            Telefone principal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Website">
+            <summary>
+            Site
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.ZipCode">
+            <summary>
+            CEP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Address">
+            <summary>
+            Endereço
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.AddressNumber">
+            <summary>
+            Número
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.AddressComplement">
+            <summary>
+            Complemento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Neighborhood">
+            <summary>
+            Bairro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.City">
+            <summary>
+            Cidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.State">
+            <summary>
+            Estado
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Country">
+            <summary>
+            País
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.LogoUrl">
+            <summary>
+            Logo URL
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.Branches">
+            <summary>
+            Filiais
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Company.FiscalConfigurations">
+            <summary>
+            Configurações fiscais
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.TaxRegime">
+            <summary>
+            Regimes tributários
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.TaxRegime.SimpleNational">
+            <summary>
+            Simples Nacional
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.TaxRegime.PresumedProfit">
+            <summary>
+            Lucro Presumido
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.TaxRegime.RealProfit">
+            <summary>
+            Lucro Real
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.TaxRegime.MEI">
+            <summary>
+            MEI (Microempreendedor Individual)
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PaymentMethod">
+            <summary>
+            Representa uma forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.Type">
+            <summary>
+            Tipo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.AccountsPayable">
+            <summary>
+            Contas a pagar
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.AccountsReceivable">
+            <summary>
+            Contas a receber
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentMethod.FinancialEntries">
+            <summary>
+            Lançamentos financeiros
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PaymentMethodType">
+            <summary>
+            Tipo de forma de pagamento
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.Cash">
+            <summary>
+            Dinheiro
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.CreditCard">
+            <summary>
+            Cartão de crédito
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.DebitCard">
+            <summary>
+            Cartão de débito
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.Check">
+            <summary>
+            Cheque
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.Boleto">
+            <summary>
+            Boleto
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.BankTransfer">
+            <summary>
+            Transferência bancária
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.Pix">
+            <summary>
+            PIX
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PaymentMethodType.Other">
+            <summary>
+            Outro
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PaymentTerm">
+            <summary>
+            Representa uma condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Days">
+            <summary>
+            Dias para pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.CashDiscountPercent">
+            <summary>
+            Desconto para pagamento à vista (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.CashDiscountValue">
+            <summary>
+            Desconto para pagamento à vista (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.LateFeePercent">
+            <summary>
+            Multa por atraso (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.DailyInterestPercent">
+            <summary>
+            Juros por dia (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Sales">
+            <summary>
+            Vendas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Purchases">
+            <summary>
+            Compras
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Clients">
+            <summary>
+            Clientes
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PaymentTerm.Suppliers">
+            <summary>
+            Fornecedores
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Bank">
+            <summary>
+            Representa um banco
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Bank.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Bank.Code">
+            <summary>
+            Código do banco (BACEN)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Bank.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Bank.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Bank.BankAccounts">
+            <summary>
+            Contas bancárias
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.BankAccount">
+            <summary>
+            Representa uma conta bancária
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.BankId">
+            <summary>
+            ID do banco
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.Bank">
+            <summary>
+            Banco
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.Agency">
+            <summary>
+            Agência
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.AgencyDigit">
+            <summary>
+            Dígito da agência
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.Account">
+            <summary>
+            Conta
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.AccountDigit">
+            <summary>
+            Dígito da conta
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.Type">
+            <summary>
+            Tipo de conta
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.AccountName">
+            <summary>
+            Nome da conta
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.CurrentBalance">
+            <summary>
+            Saldo atual
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.InitialBalance">
+            <summary>
+            Saldo inicial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.InitialBalanceDate">
+            <summary>
+            Data do saldo inicial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.IsDefault">
+            <summary>
+            Conta padrão
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.BankAccount.FinancialEntries">
+            <summary>
+            Lançamentos financeiros
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.BankAccountType">
+            <summary>
+            Tipo de conta bancária
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.BankAccountType.Checking">
+            <summary>
+            Conta corrente
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.BankAccountType.Savings">
+            <summary>
+            Conta poupança
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.BankAccountType.Salary">
+            <summary>
+            Conta salário
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.CostCenter">
+            <summary>
+            Representa um centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.Type">
+            <summary>
+            Tipo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.ParentId">
+            <summary>
+            Centro de custo pai
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.Parent">
+            <summary>
+            Centro de custo pai
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.CostCenter.FinancialEntries">
+            <summary>
+            Lançamentos financeiros
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.CostCenterType">
+            <summary>
+            Tipo de centro de custo
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.CostCenterType.Expense">
+            <summary>
+            Despesa
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.CostCenterType.Revenue">
+            <summary>
+            Receita
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.CostCenterType.Cost">
+            <summary>
+            Custo
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.CostCenterType.Investment">
+            <summary>
+            Investimento
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.AccountPayable">
+            <summary>
+            Representa uma conta a pagar
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.Number">
+            <summary>
+            Número do título
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.SupplierId">
+            <summary>
+            ID do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.Supplier">
+            <summary>
+            Fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.SupplierName">
+            <summary>
+            Nome do fornecedor (se não cadastrado)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.PurchaseId">
+            <summary>
+            ID da compra (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.Purchase">
+            <summary>
+            Compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.DocumentType">
+            <summary>
+            Tipo de documento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.DocumentNumber">
+            <summary>
+            Número do documento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.IssueDate">
+            <summary>
+            Data de emissão
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.DueDate">
+            <summary>
+            Data de vencimento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.Value">
+            <summary>
+            Valor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.PaidValue">
+            <summary>
+            Valor pago
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.PaymentMethodId">
+            <summary>
+            ID da forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.PaymentMethod">
+            <summary>
+            Forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.CostCenterId">
+            <summary>
+            ID do centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.CostCenter">
+            <summary>
+            Centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.PaymentDate">
+            <summary>
+            Data de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.FinancialEntryId">
+            <summary>
+            ID do lançamento financeiro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.FinancialEntry">
+            <summary>
+            Lançamento financeiro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.FiscalNoteId">
+            <summary>
+            ID da nota fiscal (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountPayable.FiscalNote">
+            <summary>
+            Nota fiscal
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.AccountReceivable">
+            <summary>
+            Representa uma conta a receber
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.Number">
+            <summary>
+            Número do título
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.ClientId">
+            <summary>
+            ID do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.Client">
+            <summary>
+            Cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.ClientName">
+            <summary>
+            Nome do cliente (se não cadastrado)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.SaleId">
+            <summary>
+            ID da venda (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.Sale">
+            <summary>
+            Venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.DocumentType">
+            <summary>
+            Tipo de documento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.DocumentNumber">
+            <summary>
+            Número do documento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.IssueDate">
+            <summary>
+            Data de emissão
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.DueDate">
+            <summary>
+            Data de vencimento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.Value">
+            <summary>
+            Valor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.ReceivedValue">
+            <summary>
+            Valor recebido
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.PaymentMethodId">
+            <summary>
+            ID da forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.PaymentMethod">
+            <summary>
+            Forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.CostCenterId">
+            <summary>
+            ID do centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.CostCenter">
+            <summary>
+            Centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.ReceiptDate">
+            <summary>
+            Data de recebimento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.FinancialEntryId">
+            <summary>
+            ID do lançamento financeiro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.FinancialEntry">
+            <summary>
+            Lançamento financeiro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.FiscalNoteId">
+            <summary>
+            ID da nota fiscal (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.AccountReceivable.FiscalNote">
+            <summary>
+            Nota fiscal
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.AccountDocumentType">
+            <summary>
+            Tipo de documento
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountDocumentType.Invoice">
+            <summary>
+            Nota fiscal
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountDocumentType.Duplicate">
+            <summary>
+            Duplicata
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountDocumentType.Boleto">
+            <summary>
+            Boleto
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountDocumentType.Receipt">
+            <summary>
+            Recibo
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountDocumentType.ServiceInvoice">
+            <summary>
+            Nota fiscal de serviço
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.AccountStatus">
+            <summary>
+            Status da conta
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountStatus.Pending">
+            <summary>
+            Pendente
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountStatus.Paid">
+            <summary>
+            Pago/Recebido
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountStatus.PartiallyPaid">
+            <summary>
+            Parcialmente pago
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountStatus.Overdue">
+            <summary>
+            Vencido
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.AccountStatus.Cancelled">
+            <summary>
+            Cancelado
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FinancialEntry">
+            <summary>
+            Representa um lançamento financeiro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Number">
+            <summary>
+            Número do lançamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.EntryDate">
+            <summary>
+            Data do lançamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Type">
+            <summary>
+            Tipo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Value">
+            <summary>
+            Valor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.PaymentMethodId">
+            <summary>
+            ID da forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.PaymentMethod">
+            <summary>
+            Forma de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.CostCenterId">
+            <summary>
+            ID do centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.CostCenter">
+            <summary>
+            Centro de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.BankAccountId">
+            <summary>
+            ID da conta bancária
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.BankAccount">
+            <summary>
+            Conta bancária
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.SupplierId">
+            <summary>
+            ID do fornecedor (para despesas)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Supplier">
+            <summary>
+            Fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.ClientId">
+            <summary>
+            ID do cliente (para receitas)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Client">
+            <summary>
+            Cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.DocumentNumber">
+            <summary>
+            Número do documento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.DocumentDate">
+            <summary>
+            Data do documento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.IsReconciled">
+            <summary>
+            Conciliado
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.ReconciliationDate">
+            <summary>
+            Data de conciliação
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.AccountsPayable">
+            <summary>
+            Contas a pagar
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FinancialEntry.AccountsReceivable">
+            <summary>
+            Contas a receber
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FinancialEntryType">
+            <summary>
+            Tipo de lançamento financeiro
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FinancialEntryType.Expense">
+            <summary>
+            Despesa
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FinancialEntryType.Revenue">
+            <summary>
+            Receita
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FinancialEntryType.Transfer">
+            <summary>
+            Transferência entre contas
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FinancialEntryStatus">
+            <summary>
+            Status do lançamento financeiro
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FinancialEntryStatus.Pending">
+            <summary>
+            Pendente
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FinancialEntryStatus.Confirmed">
+            <summary>
+            Confirmado
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FinancialEntryStatus.Cancelled">
+            <summary>
+            Cancelado
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FiscalNote">
+            <summary>
+            Representa uma nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.NoteType">
+            <summary>
+            Tipo de nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Series">
+            <summary>
+            Série
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Number">
+            <summary>
+            Número
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IssueDate">
+            <summary>
+            Data de emissão
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.EntryExitDate">
+            <summary>
+            Data de saída/entrada
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.ClientId">
+            <summary>
+            ID do cliente (para notas de saída)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Client">
+            <summary>
+            Cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.ClientName">
+            <summary>
+            Nome do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.ClientDocument">
+            <summary>
+            CPF/CNPJ do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.ClientIe">
+            <summary>
+            IE do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.SupplierId">
+            <summary>
+            ID do fornecedor (para notas de entrada)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Supplier">
+            <summary>
+            Fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.SupplierName">
+            <summary>
+            Nome do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.SupplierDocument">
+            <summary>
+            CPF/CNPJ do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.SupplierIe">
+            <summary>
+            IE do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.SaleId">
+            <summary>
+            ID da venda (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Sale">
+            <summary>
+            Venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.PurchaseId">
+            <summary>
+            ID da compra (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Purchase">
+            <summary>
+            Compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Cfop">
+            <summary>
+            CFOP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IcmsBasis">
+            <summary>
+            Base de cálculo ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IcmsValue">
+            <summary>
+            Valor ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IcmsRate">
+            <summary>
+            Alíquota ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IpiBasis">
+            <summary>
+            Base de cálculo IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IpiValue">
+            <summary>
+            Valor IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IpiRate">
+            <summary>
+            Alíquota IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.PisBasis">
+            <summary>
+            Base de cálculo PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.PisValue">
+            <summary>
+            Valor PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.PisRate">
+            <summary>
+            Alíquota PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.CofinsBasis">
+            <summary>
+            Base de cálculo COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.CofinsValue">
+            <summary>
+            Valor COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.CofinsRate">
+            <summary>
+            Alíquota COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Subtotal">
+            <summary>
+            Subtotal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Discount">
+            <summary>
+            Desconto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Freight">
+            <summary>
+            Frete
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Insurance">
+            <summary>
+            Seguro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.OtherExpenses">
+            <summary>
+            Outras despesas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Total">
+            <summary>
+            Total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.IsAuthorized">
+            <summary>
+            Autorizada
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.AuthorizationDate">
+            <summary>
+            Data de autorização
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.AuthorizationProtocol">
+            <summary>
+            Número do protocolo de autorização
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Xml">
+            <summary>
+            XML
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Pdf">
+            <summary>
+            PDF
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.AccessKey">
+            <summary>
+            Chave de acesso
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.Items">
+            <summary>
+            Itens da nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.AccountsPayable">
+            <summary>
+            Contas a pagar (para notas de entrada)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNote.AccountsReceivable">
+            <summary>
+            Contas a receber (para notas de saída)
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FiscalNoteType">
+            <summary>
+            Tipo de nota fiscal
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteType.Output">
+            <summary>
+            Nota fiscal de saída
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteType.Input">
+            <summary>
+            Nota fiscal de entrada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteType.Service">
+            <summary>
+            Nota fiscal de serviço
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteType.Consumer">
+            <summary>
+            Nota fiscal de consumidor
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FiscalNoteStatus">
+            <summary>
+            Status da nota fiscal
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteStatus.Pending">
+            <summary>
+            Pendente
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteStatus.Authorized">
+            <summary>
+            Autorizada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteStatus.Cancelled">
+            <summary>
+            Cancelada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalNoteStatus.Denied">
+            <summary>
+            Denegada
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FiscalNoteItem">
+            <summary>
+            Representa um item de nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.FiscalNoteId">
+            <summary>
+            ID da nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.FiscalNote">
+            <summary>
+            Nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.ProductCode">
+            <summary>
+            Código do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.ProductName">
+            <summary>
+            Nome do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Ncm">
+            <summary>
+            NCM
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Cfop">
+            <summary>
+            CFOP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Cst">
+            <summary>
+            CST (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Csosn">
+            <summary>
+            CSOSN (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.UnitOfMeasure">
+            <summary>
+            Unidade de medida
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Quantity">
+            <summary>
+            Quantidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.UnitPrice">
+            <summary>
+            Preço unitário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Discount">
+            <summary>
+            Desconto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.Total">
+            <summary>
+            Total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.IcmsBasis">
+            <summary>
+            Base de cálculo ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.IcmsValue">
+            <summary>
+            Valor ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.IcmsRate">
+            <summary>
+            Alíquota ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.IpiBasis">
+            <summary>
+            Base de cálculo IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.IpiValue">
+            <summary>
+            Valor IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.IpiRate">
+            <summary>
+            Alíquota IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.PisBasis">
+            <summary>
+            Base de cálculo PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.PisValue">
+            <summary>
+            Valor PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.PisRate">
+            <summary>
+            Alíquota PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.CofinsBasis">
+            <summary>
+            Base de cálculo COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.CofinsValue">
+            <summary>
+            Valor COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalNoteItem.CofinsRate">
+            <summary>
+            Alíquota COFINS
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Cfop">
+            <summary>
+            Representa um CFOP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cfop.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cfop.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cfop.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cfop.Application">
+            <summary>
+            Aplicação
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cfop.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Ncm">
+            <summary>
+            Representa um NCM
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Ncm.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Ncm.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Ncm.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Ncm.IpiRate">
+            <summary>
+            Alíquota de IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Ncm.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Ncm.Products">
+            <summary>
+            Produtos
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Cst">
+            <summary>
+            Representa um CST (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cst.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cst.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cst.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cst.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Cst.Products">
+            <summary>
+            Produtos
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Csosn">
+            <summary>
+            Representa um CSOSN (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Csosn.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Csosn.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Csosn.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Csosn.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Csosn.Products">
+            <summary>
+            Produtos
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FiscalConfiguration">
+            <summary>
+            Representa uma configuração fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.CompanyId">
+            <summary>
+            ID da empresa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.Company">
+            <summary>
+            Empresa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DefaultOutputCfop">
+            <summary>
+            CFOP padrão de saída
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DefaultInputCfop">
+            <summary>
+            CFOP padrão de entrada
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DefaultCst">
+            <summary>
+            CST padrão (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DefaultCsosn">
+            <summary>
+            CSOSN padrão (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DefaultIcmsRate">
+            <summary>
+            Alíquota padrão de ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.AutoIssueFiscalNote">
+            <summary>
+            Emitir nota fiscal automaticamente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DefaultSeries">
+            <summary>
+            Série padrão de notas fiscais
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.NextFiscalNoteNumber">
+            <summary>
+            Próximo número de nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.Environment">
+            <summary>
+            Ambiente (produção ou homologação)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.DigitalCertificate">
+            <summary>
+            Certificado digital
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.CertificatePassword">
+            <summary>
+            Senha do certificado
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.CertificateExpiryDate">
+            <summary>
+            Data de validade do certificado
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.FiscalConfiguration.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.FiscalEnvironment">
+            <summary>
+            Ambiente fiscal
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalEnvironment.Production">
+            <summary>
+            Produção
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.FiscalEnvironment.Homologation">
+            <summary>
+            Homologação
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Inventory">
+            <summary>
+            Representa o estoque de um produto em uma filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.Quantity">
+            <summary>
+            Quantidade atual
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.ReservedQuantity">
+            <summary>
+            Quantidade reservada
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.AvailableQuantity">
+            <summary>
+            Quantidade disponível
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.AverageCost">
+            <summary>
+            Custo médio
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.Location">
+            <summary>
+            Localização no estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.LastEntryDate">
+            <summary>
+            Data da última entrada
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.LastExitDate">
+            <summary>
+            Data da última saída
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Inventory.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.InventoryMovement">
+            <summary>
+            Representa uma movimentação de estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.InventoryId">
+            <summary>
+            ID do estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Inventory">
+            <summary>
+            Estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.MovementType">
+            <summary>
+            Tipo de movimento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Quantity">
+            <summary>
+            Quantidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.PreviousQuantity">
+            <summary>
+            Quantidade anterior
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.NewQuantity">
+            <summary>
+            Quantidade nova
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.UnitCost">
+            <summary>
+            Custo unitário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.TotalCost">
+            <summary>
+            Custo total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.SaleId">
+            <summary>
+            ID da venda (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Sale">
+            <summary>
+            Venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.PurchaseId">
+            <summary>
+            ID da compra (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Purchase">
+            <summary>
+            Compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.SaleItemId">
+            <summary>
+            ID do item de venda (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.PurchaseItemId">
+            <summary>
+            ID do item de compra (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.UserId">
+            <summary>
+            ID do usuário que executou a ação
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.InventoryMovement.UserIp">
+            <summary>
+            IP do usuário
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.InventoryMovementType">
+            <summary>
+            Tipo de movimento de estoque
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.Entry">
+            <summary>
+            Entrada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.Exit">
+            <summary>
+            Saída
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.AdjustmentIn">
+            <summary>
+            Ajuste positivo
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.AdjustmentOut">
+            <summary>
+            Ajuste negativo
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.TransferOut">
+            <summary>
+            Transferência entre filiais (saída)
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.TransferIn">
+            <summary>
+            Transferência entre filiais (entrada)
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.SalesReturn">
+            <summary>
+            Devolução de venda
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.InventoryMovementType.PurchaseReturn">
+            <summary>
+            Devolução de compra
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Person">
+            <summary>
+            Representa uma pessoa (base para clientes, fornecedores, funcionários)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.PersonType">
+            <summary>
+            Tipo de pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Document">
+            <summary>
+            CPF/CNPJ
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.RgIe">
+            <summary>
+            RG/IE
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.BirthDate">
+            <summary>
+            Data de nascimento/fundação
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Email">
+            <summary>
+            E-mail
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Phone">
+            <summary>
+            Telefone principal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.SecondaryPhone">
+            <summary>
+            Telefone secundário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.ZipCode">
+            <summary>
+            CEP
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Address">
+            <summary>
+            Endereço
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.AddressNumber">
+            <summary>
+            Número
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.AddressComplement">
+            <summary>
+            Complemento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Neighborhood">
+            <summary>
+            Bairro
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.City">
+            <summary>
+            Cidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.State">
+            <summary>
+            Estado
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Country">
+            <summary>
+            País
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Person.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PersonType">
+            <summary>
+            Tipo de pessoa
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PersonType.Physical">
+            <summary>
+            Pessoa Física
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PersonType.Legal">
+            <summary>
+            Pessoa Jurídica
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Client">
+            <summary>
+            Representa um cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.PersonId">
+            <summary>
+            ID da pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.Person">
+            <summary>
+            Pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.Code">
+            <summary>
+            Código do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.CreditLimit">
+            <summary>
+            Limite de crédito
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.PaymentDays">
+            <summary>
+            Dias de prazo para pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.PaymentTermId">
+            <summary>
+            ID da condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.PaymentTerm">
+            <summary>
+            Condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.Sales">
+            <summary>
+            Vendas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Client.AccountsReceivable">
+            <summary>
+            Contas a receber
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Supplier">
+            <summary>
+            Representa um fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.PersonId">
+            <summary>
+            ID da pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.Person">
+            <summary>
+            Pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.Code">
+            <summary>
+            Código do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.Contact">
+            <summary>
+            Contato
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.ContactPhone">
+            <summary>
+            Telefone de contato
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.ContactEmail">
+            <summary>
+            E-mail de contato
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.Purchases">
+            <summary>
+            Compras
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.SupplierProducts">
+            <summary>
+            Produtos fornecidos
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Supplier.AccountsPayable">
+            <summary>
+            Contas a pagar
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Employee">
+            <summary>
+            Representa um funcionário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.PersonId">
+            <summary>
+            ID da pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Person">
+            <summary>
+            Pessoa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Registration">
+            <summary>
+            Matrícula
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Position">
+            <summary>
+            Cargo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Department">
+            <summary>
+            Departamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Salary">
+            <summary>
+            Salário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.HireDate">
+            <summary>
+            Data de admissão
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.TerminationDate">
+            <summary>
+            Data de demissão
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.EmploymentType">
+            <summary>
+            Tipo de contratação
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Employee.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.ProductCategory">
+            <summary>
+            Representa uma categoria de produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.ParentId">
+            <summary>
+            Categoria pai
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.Parent">
+            <summary>
+            Categoria pai
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.DisplayOrder">
+            <summary>
+            Ordem de exibição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.Children">
+            <summary>
+            Subcategorias
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.ProductCategory.Products">
+            <summary>
+            Produtos
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Brand">
+            <summary>
+            Representa uma marca
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Brand.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Brand.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Brand.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Brand.Website">
+            <summary>
+            Site
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Brand.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Brand.Products">
+            <summary>
+            Produtos
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Product">
+            <summary>
+            Representa um produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Barcode">
+            <summary>
+            Código de barras
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.CategoryId">
+            <summary>
+            ID da categoria
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Category">
+            <summary>
+            Categoria
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.BrandId">
+            <summary>
+            ID da marca
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Brand">
+            <summary>
+            Marca
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.ProductType">
+            <summary>
+            Tipo do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.UnitOfMeasure">
+            <summary>
+            Unidade de medida
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.CostPrice">
+            <summary>
+            Preço de custo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.SalePrice">
+            <summary>
+            Preço de venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.MinSalePrice">
+            <summary>
+            Preço de venda mínimo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.ProfitMargin">
+            <summary>
+            Margem de lucro (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.IcmsRate">
+            <summary>
+            ICMS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.IpiRate">
+            <summary>
+            IPI (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.PisRate">
+            <summary>
+            PIS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.CofinsRate">
+            <summary>
+            COFINS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.NcmId">
+            <summary>
+            ID do NCM
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Ncm">
+            <summary>
+            NCM
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.CstId">
+            <summary>
+            ID do CST (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Cst">
+            <summary>
+            CST (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.CsosnId">
+            <summary>
+            ID do CSOSN (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Csosn">
+            <summary>
+            CSOSN (ICMS)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.MinStock">
+            <summary>
+            Estoque mínimo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.MaxStock">
+            <summary>
+            Estoque máximo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.ReorderPoint">
+            <summary>
+            Ponto de reposição
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.ManageStock">
+            <summary>
+            Controla estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.AllowSaleWithoutStock">
+            <summary>
+            Permite venda sem estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.Inventories">
+            <summary>
+            Estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.SaleItems">
+            <summary>
+            Itens de venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.PurchaseItems">
+            <summary>
+            Itens de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Product.SupplierProducts">
+            <summary>
+            Produtos por fornecedor
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.ProductType">
+            <summary>
+            Tipo de produto
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.ProductType.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.ProductType.Service">
+            <summary>
+            Serviço
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.ProductType.Combo">
+            <summary>
+            Combo
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.ProductType.Kit">
+            <summary>
+            Kit
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.SupplierProduct">
+            <summary>
+            Representa o relacionamento entre produto e fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.SupplierId">
+            <summary>
+            ID do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.Supplier">
+            <summary>
+            Fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.SupplierCode">
+            <summary>
+            Código do fornecedor para o produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.PurchasePrice">
+            <summary>
+            Preço de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.DeliveryDays">
+            <summary>
+            Prazo de entrega (dias)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.MinPurchaseQuantity">
+            <summary>
+            Quantidade mínima de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SupplierProduct.IsActive">
+            <summary>
+            Ativo
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Purchase">
+            <summary>
+            Representa uma compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Number">
+            <summary>
+            Número da compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.SupplierId">
+            <summary>
+            ID do fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Supplier">
+            <summary>
+            Fornecedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.PurchaseDate">
+            <summary>
+            Data da compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.EntryDate">
+            <summary>
+            Data de entrada (recebimento)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Status">
+            <summary>
+            Status da compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.PurchaseType">
+            <summary>
+            Tipo de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.PaymentTermId">
+            <summary>
+            ID da condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.PaymentTerm">
+            <summary>
+            Condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.BuyerId">
+            <summary>
+            ID do comprador
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Buyer">
+            <summary>
+            Comprador
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Subtotal">
+            <summary>
+            Subtotal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Discount">
+            <summary>
+            Desconto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.DiscountPercent">
+            <summary>
+            Desconto (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Freight">
+            <summary>
+            Frete
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.OtherExpenses">
+            <summary>
+            Outras despesas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.IcmsTotal">
+            <summary>
+            Total de ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.IpiTotal">
+            <summary>
+            Total de IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.PisTotal">
+            <summary>
+            Total de PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.CofinsTotal">
+            <summary>
+            Total de COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Total">
+            <summary>
+            Total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.FiscalNoteId">
+            <summary>
+            ID da nota fiscal (se emitida)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.FiscalNote">
+            <summary>
+            Nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.CancelledDate">
+            <summary>
+            Data de cancelamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.CancelledReason">
+            <summary>
+            Motivo do cancelamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.CancelledBy">
+            <summary>
+            ID do usuário que cancelou
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.Items">
+            <summary>
+            Itens da compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.AccountsPayable">
+            <summary>
+            Contas a pagar
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Purchase.InventoryMovements">
+            <summary>
+            Movimentações de estoque
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PurchaseStatus">
+            <summary>
+            Status da compra
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Draft">
+            <summary>
+            Rascunho
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Confirmed">
+            <summary>
+            Confirmada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Approving">
+            <summary>
+            Em aprovação
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Approved">
+            <summary>
+            Aprovada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.InTransit">
+            <summary>
+            Em transporte
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Received">
+            <summary>
+            Recebida
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Invoiced">
+            <summary>
+            Faturada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseStatus.Cancelled">
+            <summary>
+            Cancelada
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PurchaseType">
+            <summary>
+            Tipo de compra
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseType.Purchase">
+            <summary>
+            Compra normal
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseType.Quote">
+            <summary>
+            Cotação
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseType.Order">
+            <summary>
+            Pedido
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.PurchaseType.Return">
+            <summary>
+            Devolução
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.PurchaseItem">
+            <summary>
+            Representa um item de compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.PurchaseId">
+            <summary>
+            ID da compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Purchase">
+            <summary>
+            Compra
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.ProductCode">
+            <summary>
+            Código do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.ProductName">
+            <summary>
+            Nome do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Quantity">
+            <summary>
+            Quantidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.ReceivedQuantity">
+            <summary>
+            Quantidade recebida
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.UnitOfMeasure">
+            <summary>
+            Unidade de medida
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.UnitPrice">
+            <summary>
+            Preço unitário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Discount">
+            <summary>
+            Desconto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.DiscountPercent">
+            <summary>
+            Desconto (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.IcmsRate">
+            <summary>
+            ICMS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.IcmsValue">
+            <summary>
+            ICMS (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.IpiRate">
+            <summary>
+            IPI (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.IpiValue">
+            <summary>
+            IPI (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.PisRate">
+            <summary>
+            PIS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.PisValue">
+            <summary>
+            PIS (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.CofinsRate">
+            <summary>
+            COFINS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.CofinsValue">
+            <summary>
+            COFINS (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Subtotal">
+            <summary>
+            Subtotal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Total">
+            <summary>
+            Total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.PurchaseItem.InventoryMovements">
+            <summary>
+            Movimentações de estoque
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.Sale">
+            <summary>
+            Representa uma venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.BranchId">
+            <summary>
+            ID da filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Branch">
+            <summary>
+            Filial
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Number">
+            <summary>
+            Número da venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.ClientId">
+            <summary>
+            ID do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Client">
+            <summary>
+            Cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.ClientName">
+            <summary>
+            Nome do cliente (se não cadastrado)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.ClientDocument">
+            <summary>
+            CPF/CNPJ do cliente (se não cadastrado)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.SaleDate">
+            <summary>
+            Data da venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Status">
+            <summary>
+            Status da venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.SaleType">
+            <summary>
+            Tipo de venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.PaymentTermId">
+            <summary>
+            ID da condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.PaymentTerm">
+            <summary>
+            Condição de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.SellerId">
+            <summary>
+            ID do vendedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Seller">
+            <summary>
+            Vendedor
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Subtotal">
+            <summary>
+            Subtotal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Discount">
+            <summary>
+            Desconto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.DiscountPercent">
+            <summary>
+            Desconto (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.IcmsTotal">
+            <summary>
+            Total de ICMS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.IpiTotal">
+            <summary>
+            Total de IPI
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.PisTotal">
+            <summary>
+            Total de PIS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.CofinsTotal">
+            <summary>
+            Total de COFINS
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Freight">
+            <summary>
+            Frete
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.OtherExpenses">
+            <summary>
+            Outras despesas
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Total">
+            <summary>
+            Total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.FiscalNoteId">
+            <summary>
+            ID da nota fiscal (se emitida)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.FiscalNote">
+            <summary>
+            Nota fiscal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.CancelledDate">
+            <summary>
+            Data de cancelamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.CancelledReason">
+            <summary>
+            Motivo do cancelamento
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.CancelledBy">
+            <summary>
+            ID do usuário que cancelou
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.Items">
+            <summary>
+            Itens da venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.AccountsReceivable">
+            <summary>
+            Contas a receber
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.Sale.InventoryMovements">
+            <summary>
+            Movimentações de estoque
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.SaleStatus">
+            <summary>
+            Status da venda
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Draft">
+            <summary>
+            Rascunho
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Confirmed">
+            <summary>
+            Confirmada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Separating">
+            <summary>
+            Em separação
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Separated">
+            <summary>
+            Separada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.InTransit">
+            <summary>
+            Em transporte
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Delivered">
+            <summary>
+            Entregue
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Invoiced">
+            <summary>
+            Faturada
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleStatus.Cancelled">
+            <summary>
+            Cancelada
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.SaleType">
+            <summary>
+            Tipo de venda
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleType.Sale">
+            <summary>
+            Venda normal
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleType.Quote">
+            <summary>
+            Orçamento
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleType.Order">
+            <summary>
+            Pedido
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleType.Return">
+            <summary>
+            Devolução
+            </summary>
+        </member>
+        <member name="F:ERP.Tenant.Models.SaleType.Bonus">
+            <summary>
+            Bonificação
+            </summary>
+        </member>
+        <member name="T:ERP.Tenant.Models.SaleItem">
+            <summary>
+            Representa um item de venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.SaleId">
+            <summary>
+            ID da venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Sale">
+            <summary>
+            Venda
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Product">
+            <summary>
+            Produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.ProductCode">
+            <summary>
+            Código do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.ProductName">
+            <summary>
+            Nome do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Quantity">
+            <summary>
+            Quantidade
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.UnitOfMeasure">
+            <summary>
+            Unidade de medida
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.UnitPrice">
+            <summary>
+            Preço unitário
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Discount">
+            <summary>
+            Desconto
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.DiscountPercent">
+            <summary>
+            Desconto (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.IcmsRate">
+            <summary>
+            ICMS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.IcmsValue">
+            <summary>
+            ICMS (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.IpiRate">
+            <summary>
+            IPI (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.IpiValue">
+            <summary>
+            IPI (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.PisRate">
+            <summary>
+            PIS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.PisValue">
+            <summary>
+            PIS (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.CofinsRate">
+            <summary>
+            COFINS (%)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.CofinsValue">
+            <summary>
+            COFINS (valor)
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Subtotal">
+            <summary>
+            Subtotal
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Total">
+            <summary>
+            Total
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.Notes">
+            <summary>
+            Observações
+            </summary>
+        </member>
+        <member name="P:ERP.Tenant.Models.SaleItem.InventoryMovements">
+            <summary>
+            Movimentações de estoque
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,913 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ERP.Web</name>
+    </assembly>
+    <members>
+        <member name="T:ERP.Web.Controllers.AuthController">
+            <summary>
+            Controller para autenticação
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.#ctor(Microsoft.AspNetCore.Identity.UserManager{ERP.Master.Models.User},Microsoft.AspNetCore.Identity.SignInManager{ERP.Master.Models.User},ERP.Master.Services.IJwtService,ERP.Master.Services.TwoFactorService,ERP.Master.Infrastructure.Data.MasterDbContext,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.AuthController})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="userManager">UserManager</param>
+            <param name="signInManager">SignInManager</param>
+            <param name="jwtService">JwtService</param>
+            <param name="twoFactorService">TwoFactorService</param>
+            <param name="dbContext">MasterDbContext</param>
+            <param name="logger">Logger</param>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.Login(ERP.Web.Controllers.AuthDtos.LoginRequest)">
+            <summary>
+            Login
+            </summary>
+            <param name="request">Dados de login</param>
+            <returns>Token JWT</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.LoginWithTwoFactor(ERP.Web.Controllers.AuthDtos.LoginTwoFactorRequest)">
+            <summary>
+            Login com 2FA
+            </summary>
+            <param name="request">Dados de login com 2FA</param>
+            <returns>Token JWT</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.Refresh(ERP.Web.Controllers.AuthDtos.RefreshTokenRequest)">
+            <summary>
+            Refresh token
+            </summary>
+            <param name="request">Dados de refresh token</param>
+            <returns>Novo token JWT</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.Logout">
+            <summary>
+            Logout
+            </summary>
+            <returns>Sucesso</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.GetCurrentUser">
+            <summary>
+            Obtém o usuário atual
+            </summary>
+            <returns>Dados do usuário</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.EnableTwoFactor(ERP.Web.Controllers.AuthDtos.EnableTwoFactorRequest)">
+            <summary>
+            Habilita 2FA
+            </summary>
+            <param name="request">Dados para habilitar 2FA</param>
+            <returns>Sucesso</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.DisableTwoFactor(ERP.Web.Controllers.AuthDtos.DisableTwoFactorRequest)">
+            <summary>
+            Desabilita 2FA
+            </summary>
+            <param name="request">Dados para desabilitar 2FA</param>
+            <returns>Sucesso</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.GenerateTwoFactorSecret">
+            <summary>
+            Gera segredo para 2FA
+            </summary>
+            <returns>Segredo e URI para QR Code</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.GetClientIp">
+            <summary>
+            Obtém o IP do cliente
+            </summary>
+            <returns>IP do cliente</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.AuthController.LogLoginAttemptAsync(ERP.Master.Models.User,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Loga uma tentativa de login
+            </summary>
+            <param name="user">Usuário</param>
+            <param name="username">Username</param>
+            <param name="isSuccess">Sucesso</param>
+            <param name="wrongPassword">Senha errada</param>
+            <param name="userNotFound">Usuário não encontrado</param>
+            <param name="accountLocked">Conta bloqueada</param>
+            <param name="twoFactorFailed">2FA falhou</param>
+            <returns>Task</returns>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos">
+            <summary>
+            DTOs para autenticação
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.LoginRequest">
+            <summary>
+            Request de login
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginRequest.Username">
+            <summary>
+            Usuário ou e-mail
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginRequest.Password">
+            <summary>
+            Senha
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.LoginTwoFactorRequest">
+            <summary>
+            Request de login com 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginTwoFactorRequest.UserId">
+            <summary>
+            ID do usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginTwoFactorRequest.Code">
+            <summary>
+            Código 2FA
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.RefreshTokenRequest">
+            <summary>
+            Request de refresh token
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.RefreshTokenRequest.Token">
+            <summary>
+            Token JWT
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.RefreshTokenRequest.RefreshToken">
+            <summary>
+            Refresh token
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.EnableTwoFactorRequest">
+            <summary>
+            Request para habilitar 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.EnableTwoFactorRequest.Secret">
+            <summary>
+            Segredo
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.EnableTwoFactorRequest.Code">
+            <summary>
+            Código
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.DisableTwoFactorRequest">
+            <summary>
+            Request para desabilitar 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.DisableTwoFactorRequest.Password">
+            <summary>
+            Senha
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.LoginResponse">
+            <summary>
+            Response de login
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.Token">
+            <summary>
+            Token JWT
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.RefreshToken">
+            <summary>
+            Refresh token
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.ExpiresIn">
+            <summary>
+            Tempo de expiração (segundos)
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.RequiresTwoFactor">
+            <summary>
+            Requere 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.TwoFactorToken">
+            <summary>
+            Token temporário para 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.UserId">
+            <summary>
+            ID do usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.LoginResponse.User">
+            <summary>
+            Dados do usuário
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.RefreshTokenResponse">
+            <summary>
+            Response de refresh token
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.RefreshTokenResponse.Token">
+            <summary>
+            Token JWT
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.RefreshTokenResponse.RefreshToken">
+            <summary>
+            Refresh token
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.RefreshTokenResponse.ExpiresIn">
+            <summary>
+            Tempo de expiração (segundos)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.TwoFactorResponse">
+            <summary>
+            Response de 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.TwoFactorResponse.Enabled">
+            <summary>
+            Habilitado
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.TwoFactorResponse.RecoveryCodes">
+            <summary>
+            Códigos de recuperação
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.TwoFactorSecretResponse">
+            <summary>
+            Response de segredo 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.TwoFactorSecretResponse.Secret">
+            <summary>
+            Segredo
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.TwoFactorSecretResponse.QrCodeUri">
+            <summary>
+            URI do QR Code
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.AuthDtos.UserDto">
+            <summary>
+            DTO do usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Username">
+            <summary>
+            Usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Email">
+            <summary>
+            E-mail
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.FirstName">
+            <summary>
+            Primeiro nome
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.LastName">
+            <summary>
+            Sobrenome
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.FullName">
+            <summary>
+            Nome completo
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.EmailVerified">
+            <summary>
+            E-mail verificado
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.TwoFactorEnabled">
+            <summary>
+            2FA habilitado
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.PhoneNumber">
+            <summary>
+            Telefone
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.AvatarUrl">
+            <summary>
+            URL do avatar
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Locale">
+            <summary>
+            Localidade
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Timezone">
+            <summary>
+            Fuso horário
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Roles">
+            <summary>
+            Roles
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.LastLogin">
+            <summary>
+            Último login
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.BaseController">
+            <summary>
+            Controller base com funcionalidades comuns
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.GetCurrentUserId">
+            <summary>
+            Obtém o ID do usuário autenticado
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.GetCurrentTenantId">
+            <summary>
+            Obtém o ID do tenant atual
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.GetCurrentUsername">
+            <summary>
+            Obtém o nome do usuário autenticado
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.GetCurrentUserEmail">
+            <summary>
+            Obtém o e-mail do usuário autenticado
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.GetCurrentUserRoles">
+            <summary>
+            Obtém os roles do usuário autenticado
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.HasRole(System.String)">
+            <summary>
+            Verifica se o usuário tem um role específico
+            </summary>
+            <param name="role">Role a verificar</param>
+            <returns>True se o usuário tiver o role</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.HasPermission(System.String)">
+            <summary>
+            Verifica se o usuário tem uma permissão específica
+            </summary>
+            <param name="permission">Permissão a verificar</param>
+            <returns>True se o usuário tiver a permissão</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.Success``1(``0,System.String)">
+            <summary>
+            Retorna uma resposta de sucesso
+            </summary>
+            <typeparam name="T">Tipo do dado</typeparam>
+            <param name="data">Dados a retornar</param>
+            <param name="message">Mensagem de sucesso</param>
+            <returns>OkObjectResult</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.Success(System.String)">
+            <summary>
+            Retorna uma resposta de sucesso sem dados
+            </summary>
+            <param name="message">Mensagem de sucesso</param>
+            <returns>OkObjectResult</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.Error(System.String,System.String)">
+            <summary>
+            Retorna uma resposta de erro
+            </summary>
+            <param name="message">Mensagem de erro</param>
+            <param name="errorCode">Código de erro</param>
+            <returns>BadRequestObjectResult</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.ValidationError(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}})">
+            <summary>
+            Retorna uma resposta de erro com validação
+            </summary>
+            <param name="errors">Dicionário de erros</param>
+            <returns>BadRequestObjectResult</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.NotFound(System.String)">
+            <summary>
+            Retorna uma resposta de não encontrado
+            </summary>
+            <param name="message">Mensagem de erro</param>
+            <returns>NotFoundObjectResult</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.Unauthorized(System.String)">
+            <summary>
+            Retorna uma resposta de não autorizado
+            </summary>
+            <param name="message">Mensagem de erro</param>
+            <returns>UnauthorizedObjectResult</returns>
+        </member>
+        <member name="M:ERP.Web.Controllers.BaseController.Forbidden(System.String)">
+            <summary>
+            Retorna uma resposta de acesso negado
+            </summary>
+            <param name="message">Mensagem de erro</param>
+            <returns>ForbidResult</returns>
+        </member>
+        <member name="T:ERP.Web.Controllers.ApiResponse">
+            <summary>
+            Resposta genérica da API
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.ApiResponse.Success">
+            <summary>
+            Sucesso
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.ApiResponse.Message">
+            <summary>
+            Mensagem
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.ApiResponse.ErrorCode">
+            <summary>
+            Código de erro
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.ApiResponse.Errors">
+            <summary>
+            Erros de validação
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.ApiResponse.Timestamp">
+            <summary>
+            Timestamp
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.ApiResponse`1">
+            <summary>
+            Resposta da API com dados
+            </summary>
+            <typeparam name="T">Tipo do dado</typeparam>
+        </member>
+        <member name="P:ERP.Web.Controllers.ApiResponse`1.Data">
+            <summary>
+            Dados
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.PagedResponse`1">
+            <summary>
+            Resposta paginada da API
+            </summary>
+            <typeparam name="T">Tipo do dado</typeparam>
+        </member>
+        <member name="P:ERP.Web.Controllers.PagedResponse`1.PageNumber">
+            <summary>
+            Página atual
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PagedResponse`1.PageSize">
+            <summary>
+            Tamanho da página
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PagedResponse`1.TotalCount">
+            <summary>
+            Total de itens
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PagedResponse`1.TotalPages">
+            <summary>
+            Total de páginas
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PagedResponse`1.HasPreviousPage">
+            <summary>
+            Tem página anterior
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PagedResponse`1.HasNextPage">
+            <summary>
+            Tem próxima página
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.TenantsController">
+            <summary>
+            Controller para gerenciamento de tenants
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.#ctor(ERP.Master.Infrastructure.Data.MasterDbContext,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.TenantsController})">
+            <summary>
+            Construtor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.GetAll(ERP.Web.Controllers.TenantDtos.GetTenantsRequest)">
+            <summary>
+            Lista todos os tenants
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.GetById(System.Guid)">
+            <summary>
+            Obtém um tenant pelo ID
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.Create(ERP.Web.Controllers.TenantDtos.CreateTenantRequest)">
+            <summary>
+            Cria um novo tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.Update(System.Guid,ERP.Web.Controllers.TenantDtos.UpdateTenantRequest)">
+            <summary>
+            Atualiza um tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.Delete(System.Guid)">
+            <summary>
+            Deleta um tenant (soft delete)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Middleware.AuditMiddleware">
+            <summary>
+            Middleware para auditoria de requisições
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuditMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{ERP.Shared.Settings.MultiTenancySettings})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="next">Próximo middleware</param>
+            <param name="settings">Configurações de multi-tenancy</param>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuditMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoca o middleware
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <returns>Task</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuditMiddleware.LogRequestAsync(Microsoft.AspNetCore.Http.HttpContext,System.TimeSpan,System.Exception)">
+            <summary>
+            Loga a requisição
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <param name="duration">Duração da requisição</param>
+            <param name="exception">Exceção (se houver)</param>
+            <returns>Task</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.EntityTypeMetadata">
+            <summary>
+            Metadados para tipo de entidade
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.EntityTypeMetadata.Type">
+            <summary>
+            Tipo da entidade
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.EntityTypeMetadata.#ctor(System.String)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="type">Tipo da entidade</param>
+        </member>
+        <member name="T:ERP.Web.Middleware.AuditMiddlewareExtensions">
+            <summary>
+            Extensions para AuditMiddleware
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuditMiddlewareExtensions.UseAuditLogging(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adiciona o middleware de auditoria
+            </summary>
+            <param name="builder">IApplicationBuilder</param>
+            <returns>IApplicationBuilder</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.AuthorizationMiddleware">
+            <summary>
+            Middleware para autorização baseada em RBAC
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuthorizationMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{ERP.Shared.Settings.MultiTenancySettings})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="next">Próximo middleware</param>
+            <param name="settings">Configurações de multi-tenancy</param>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuthorizationMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoca o middleware
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <returns>Task</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuthorizationMiddleware.ValidateUserPermissionAsync(Microsoft.AspNetCore.Http.HttpContext,System.String,System.Guid,ERP.Web.Middleware.AuthorizationMetadata)">
+            <summary>
+            Valida a permissão do usuário
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <param name="userId">ID do usuário</param>
+            <param name="tenantId">ID do tenant</param>
+            <param name="metadata">Metadados de autorização</param>
+            <returns>True se autorizado</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.AuthorizeAttribute">
+            <summary>
+            Metadados de autorização
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.AuthorizeAttribute.RequiredRoles">
+            <summary>
+            Roles necessárias
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.AuthorizeAttribute.RequiredPermissions">
+            <summary>
+            Permissões necessárias
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.AuthorizeAttribute.RequiredModules">
+            <summary>
+            Módulos necessários
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Middleware.AuthorizationMetadata">
+            <summary>
+            Metadados de autorização
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.AuthorizationMetadata.RequiredRoles">
+            <summary>
+            Roles necessárias
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.AuthorizationMetadata.RequiredPermissions">
+            <summary>
+            Permissões necessárias
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.AuthorizationMetadata.RequiredModules">
+            <summary>
+            Módulos necessários
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Middleware.AuthorizationMiddlewareExtensions">
+            <summary>
+            Extensions para AuthorizationMiddleware
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.AuthorizationMiddlewareExtensions.UseAuthorizationMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adiciona o middleware de autorização
+            </summary>
+            <param name="builder">IApplicationBuilder</param>
+            <returns>IApplicationBuilder</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.ExceptionMiddleware">
+            <summary>
+            Middleware para tratamento global de exceções
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{ERP.Web.Middleware.ExceptionMiddleware})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="next">Próximo middleware</param>
+            <param name="logger">Logger</param>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoca o middleware
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <returns>Task</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception)">
+            <summary>
+            Trata a exceção e retorna a resposta apropriada
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <param name="exception">Exceção</param>
+            <returns>Task</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.GetErrorMessage(System.Exception)">
+            <summary>
+            Obtém a mensagem de erro
+            </summary>
+            <param name="exception">Exceção</param>
+            <returns>Mensagem de erro</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.GetErrorCode(System.Exception)">
+            <summary>
+            Obtém o código de erro
+            </summary>
+            <param name="exception">Exceção</param>
+            <returns>Código de erro</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.GetErrorDetails(System.Exception)">
+            <summary>
+            Obtém os detalhes do erro
+            </summary>
+            <param name="exception">Exceção</param>
+            <returns>Detalhes do erro</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddleware.GetStatusCode(System.Exception)">
+            <summary>
+            Obtém o status code HTTP
+            </summary>
+            <param name="exception">Exceção</param>
+            <returns>Status code</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.ExceptionMiddlewareExtensions">
+            <summary>
+            Extensions para ExceptionMiddleware
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.ExceptionMiddlewareExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adiciona o middleware de exceções
+            </summary>
+            <param name="builder">IApplicationBuilder</param>
+            <returns>IApplicationBuilder</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.TenantResolutionMiddleware">
+            <summary>
+            Middleware para resolução de tenant
+            Identifica o tenant da requisição e configura o contexto
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{ERP.Shared.Settings.MultiTenancySettings})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="next">Próximo middleware</param>
+            <param name="settings">Configurações de multi-tenancy</param>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoca o middleware
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <returns>Task</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddleware.ResolveTenant(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Resolve o tenant da requisição
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <returns>TenantContext</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddleware.GetSubdomain(System.String)">
+            <summary>
+            Extrai o subdomínio do host
+            </summary>
+            <param name="host">Host</param>
+            <returns>Subdomínio</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.TenantContext">
+            <summary>
+            Contexto do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.TenantContext.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.TenantContext.TenantName">
+            <summary>
+            Nome do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.TenantContext.ConnectionString">
+            <summary>
+            Connection string do banco do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.TenantContext.ResolutionMethod">
+            <summary>
+            Método de resolução
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Middleware.TenantContext.IsResolved">
+            <summary>
+            Verifica se o tenant foi resolvido
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Middleware.TenantResolutionMethod">
+            <summary>
+            Método de resolução do tenant
+            </summary>
+        </member>
+        <member name="F:ERP.Web.Middleware.TenantResolutionMethod.Unknown">
+            <summary>
+            Desconhecido
+            </summary>
+        </member>
+        <member name="F:ERP.Web.Middleware.TenantResolutionMethod.Header">
+            <summary>
+            Header HTTP
+            </summary>
+        </member>
+        <member name="F:ERP.Web.Middleware.TenantResolutionMethod.Subdomain">
+            <summary>
+            Subdomínio
+            </summary>
+        </member>
+        <member name="F:ERP.Web.Middleware.TenantResolutionMethod.Token">
+            <summary>
+            Token JWT
+            </summary>
+        </member>
+        <member name="F:ERP.Web.Middleware.TenantResolutionMethod.Default">
+            <summary>
+            Tenant padrão
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Middleware.TenantResolutionMiddlewareExtensions">
+            <summary>
+            Extensions para TenantResolutionMiddleware
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddlewareExtensions.UseTenantResolution(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adiciona o middleware de resolução de tenant
+            </summary>
+            <param name="builder">IApplicationBuilder</param>
+            <returns>IApplicationBuilder</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddlewareExtensions.GetTenantContext(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Obtém o contexto do tenant do HttpContext
+            </summary>
+            <param name="context">HttpContext</param>
+            <returns>TenantContext</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantResolutionMiddlewareExtensions.GetTenantId(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Obtém o ID do tenant do HttpContext
+            </summary>
+            <param name="context">HttpContext</param>
+            <returns>ID do tenant</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.TenantValidationMiddleware">
+            <summary>
+            Middleware para validação de tenant
+            Valida se o tenant existe e está ativo
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantValidationMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{ERP.Shared.Settings.MultiTenancySettings})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="next">Próximo middleware</param>
+            <param name="settings">Configurações de multi-tenancy</param>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantValidationMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoca o middleware
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <returns>Task</returns>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantValidationMiddleware.ValidateTenantAsync(Microsoft.AspNetCore.Http.HttpContext,ERP.Web.Middleware.TenantContext)">
+            <summary>
+            Valida o tenant no banco de dados
+            </summary>
+            <param name="context">Contexto HTTP</param>
+            <param name="tenantContext">Contexto do tenant</param>
+            <returns>Tenant ou null</returns>
+        </member>
+        <member name="T:ERP.Web.Middleware.TenantValidationMiddlewareExtensions">
+            <summary>
+            Extensions para TenantValidationMiddleware
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Middleware.TenantValidationMiddlewareExtensions.UseTenantValidation(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adiciona o middleware de validação de tenant
+            </summary>
+            <param name="builder">IApplicationBuilder</param>
+            <returns>IApplicationBuilder</returns>
+        </member>
+    </members>
+</doc>

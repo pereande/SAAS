@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "WpshcgbkV1o=",
+  "dgSpecHash": "rUcUKxAD75A=",
   "success": true,
-  "projectFilePath": "/src/src/ERP.Web/ERP.Web.csproj",
+  "projectFilePath": "/app/src/ERP.Web/ERP.Web.csproj",
   "expectedPackageFiles": [
     "/root/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/root/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "/root/.nuget/packages/efcore.namingconventions/8.0.0/efcore.namingconventions.8.0.0.nupkg.sha512",
     "/root/.nuget/packages/fluentvalidation/11.11.0/fluentvalidation.11.11.0.nupkg.sha512",
     "/root/.nuget/packages/fluentvalidation.aspnetcore/11.3.1/fluentvalidation.aspnetcore.11.3.1.nupkg.sha512",
     "/root/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.11.0/fluentvalidation.dependencyinjectionextensions.11.11.0.nupkg.sha512",

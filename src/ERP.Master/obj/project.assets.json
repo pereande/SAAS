@@ -27,6 +27,20 @@
           "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
+      "EFCore.NamingConventions/8.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "[8.0.0, 9.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[8.0.0, 9.0.0)",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/EFCore.NamingConventions.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/EFCore.NamingConventions.dll": {}
+        }
+      },
       "FluentValidation/11.5.0": {
         "type": "package",
         "compile": {
@@ -1092,6 +1106,18 @@
         "automapper.extensions.microsoft.dependencyinjection.nuspec",
         "icon.png",
         "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
+      ]
+    },
+    "EFCore.NamingConventions/8.0.0": {
+      "sha512": "XxnNDNRO3Y3VaEEj/McLnITiZyQbcVMtp2De7k14C7pveKRWk6QHrMfiurb5VCMaDvB/uF65b+geInJH1SZFsQ==",
+      "type": "package",
+      "path": "efcore.namingconventions/8.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "efcore.namingconventions.8.0.0.nupkg.sha512",
+        "efcore.namingconventions.nuspec",
+        "lib/net8.0/EFCore.NamingConventions.dll"
       ]
     },
     "FluentValidation/11.5.0": {
@@ -2841,6 +2867,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
+      "EFCore.NamingConventions >= 8.0.0",
       "ERP.Shared >= 1.0.0",
       "FluentValidation >= 11.5.0",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 8.0.0",
@@ -2866,11 +2893,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/src/src/ERP.Master/ERP.Master.csproj",
+      "projectUniqueName": "/app/src/ERP.Master/ERP.Master.csproj",
       "projectName": "ERP.Master",
-      "projectPath": "/src/src/ERP.Master/ERP.Master.csproj",
+      "projectPath": "/app/src/ERP.Master/ERP.Master.csproj",
       "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/src/src/ERP.Master/obj/",
+      "outputPath": "/app/src/ERP.Master/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/root/.nuget/NuGet/NuGet.Config"
@@ -2885,8 +2912,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/src/src/ERP.Shared/ERP.Shared.csproj": {
-              "projectPath": "/src/src/ERP.Shared/ERP.Shared.csproj"
+            "/app/src/ERP.Shared/ERP.Shared.csproj": {
+              "projectPath": "/app/src/ERP.Shared/ERP.Shared.csproj"
             }
           }
         }
@@ -2904,6 +2931,10 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[12.0.1, )"
+          },
+          "EFCore.NamingConventions": {
+            "target": "Package",
+            "version": "[8.0.0, )"
           },
           "FluentValidation": {
             "target": "Package",

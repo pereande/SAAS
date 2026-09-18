@@ -125,7 +125,7 @@ public class TenantsController : BaseController
             var dbName = $"erp_tenant_{Guid.NewGuid():N}".ToLower();
             var connectionString = GetTenantConnectionString(dbName);
 
-            var tenant = new Tenant
+            var tenant = new ERP.Master.Models.Tenant
             {
                 Name = request.Name,
                 Cnpj = request.Cnpj,
@@ -220,7 +220,7 @@ public class TenantsController : BaseController
         }
     }
 
-    private TenantDto MapToDto(Tenant t) => new TenantDto
+    private TenantDto MapToDto(ERP.Master.Models.Tenant t) => new TenantDto
     {
         Id = t.Id,
         Name = t.Name,
@@ -247,7 +247,7 @@ public class TenantsController : BaseController
         } : null
     };
 
-    private TenantDetailsDto MapToDetailsDto(Tenant t) => new TenantDetailsDto
+    private TenantDetailsDto MapToDetailsDto(ERP.Master.Models.Tenant t) => new TenantDetailsDto
     {
         Id = t.Id,
         Name = t.Name,
@@ -297,12 +297,12 @@ public class TenantsController : BaseController
     private string GetTenantConnectionString(string dbName) =>
         "Host=erp-db;Port=5432;Database=" + dbName + ";Username=postgres;Password=postgres";
 
-    private async Task CreateTenantAdminUserAsync(Tenant tenant, CreateTenantUserRequest adminUser)
+    private async Task CreateTenantAdminUserAsync(ERP.Master.Models.Tenant tenant, CreateTenantUserRequest adminUser)
     {
         // Implementation for creating admin user
     }
 
-    private async Task CreateTenantSubscriptionAsync(Tenant tenant, CreateSubscriptionRequest subscription)
+    private async Task CreateTenantSubscriptionAsync(ERP.Master.Models.Tenant tenant, CreateSubscriptionRequest subscription)
     {
         // Implementation for creating subscription
     }

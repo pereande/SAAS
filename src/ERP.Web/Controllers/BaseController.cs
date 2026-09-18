@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ERP.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -193,7 +194,7 @@ public class BaseController : ControllerBase
     /// <returns>ForbidResult</returns>
     protected IActionResult Forbidden(string message = "Forbidden: You do not have permission")
     {
-        return Forbid(new ApiResponse
+        return StatusCode(403, new ApiResponse
         {
             Success = false,
             Message = message,

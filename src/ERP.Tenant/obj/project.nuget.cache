@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "/Dzk832LAgU=",
+  "dgSpecHash": "fjbS3HB1xSg=",
   "success": true,
-  "projectFilePath": "/src/src/ERP.Tenant/ERP.Tenant.csproj",
+  "projectFilePath": "/app/src/ERP.Tenant/ERP.Tenant.csproj",
   "expectedPackageFiles": [
     "/root/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/root/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "/root/.nuget/packages/efcore.namingconventions/8.0.0/efcore.namingconventions.8.0.0.nupkg.sha512",
     "/root/.nuget/packages/fluentvalidation/11.5.0/fluentvalidation.11.5.0.nupkg.sha512",
     "/root/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/root/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0/microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

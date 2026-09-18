@@ -90,7 +90,7 @@ public class ExceptionMiddleware
         {
             ValidationException ve => ve.Message,
             BadRequestException bre => bre.Message,
-            EntityNotFoundException _ => "Resource not found.",
+            NotFoundException _ => "Resource not found.",
             UnauthorizedException _ => "Unauthorized access.",
             ForbiddenException fe => fe.Message,
             _ => "An unexpected error occurred."
@@ -108,7 +108,7 @@ public class ExceptionMiddleware
         {
             ValidationException _ => "VALIDATION_ERROR",
             BadRequestException _ => "BAD_REQUEST",
-            EntityNotFoundException _ => "NOT_FOUND",
+            NotFoundException _ => "NOT_FOUND",
             UnauthorizedException _ => "UNAUTHORIZED",
             ForbiddenException _ => "FORBIDDEN",
             _ => "INTERNAL_SERVER_ERROR"
@@ -140,7 +140,7 @@ public class ExceptionMiddleware
         {
             ValidationException _ => (int)HttpStatusCode.BadRequest,
             BadRequestException _ => (int)HttpStatusCode.BadRequest,
-            EntityNotFoundException _ => (int)HttpStatusCode.NotFound,
+            NotFoundException _ => (int)HttpStatusCode.NotFound,
             UnauthorizedException _ => (int)HttpStatusCode.Unauthorized,
             ForbiddenException _ => (int)HttpStatusCode.Forbidden,
             _ => (int)HttpStatusCode.InternalServerError

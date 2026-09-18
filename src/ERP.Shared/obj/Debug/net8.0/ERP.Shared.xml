@@ -349,6 +349,16 @@
             ID único da entidade
             </summary>
         </member>
+        <member name="T:ERP.Shared.Models.ITenantEntity">
+            <summary>
+            Interface para entidades que pertencem a um tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Shared.Models.ITenantEntity.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
         <member name="T:ERP.Shared.Settings.AppSettings">
             <summary>
             Configurações gerais da aplicação

@@ -542,7 +542,7 @@ public class AuthController : BaseController
     /// <returns>IP do cliente</returns>
     private string GetClientIp()
     {
-        return Request.Headers["X-Forwarded-For"].FirstOrDefault() ?:
+        return Request.Headers["X-Forwarded-For"].FirstOrDefault() ??
                Request.HttpContext.Connection.RemoteIpAddress?.ToString() ??
                "unknown";
     }

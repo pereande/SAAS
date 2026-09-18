@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/src/src/ERP.Shared/ERP.Shared.csproj": {}
+    "/app/src/ERP.Shared/ERP.Shared.csproj": {}
   },
   "projects": {
-    "/src/src/ERP.Shared/ERP.Shared.csproj": {
+    "/app/src/ERP.Shared/ERP.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/src/src/ERP.Shared/ERP.Shared.csproj",
+        "projectUniqueName": "/app/src/ERP.Shared/ERP.Shared.csproj",
         "projectName": "ERP.Shared",
-        "projectPath": "/src/src/ERP.Shared/ERP.Shared.csproj",
+        "projectPath": "/app/src/ERP.Shared/ERP.Shared.csproj",
         "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/src/src/ERP.Shared/obj/",
+        "outputPath": "/app/src/ERP.Shared/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/root/.nuget/NuGet/NuGet.Config"

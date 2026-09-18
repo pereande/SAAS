@@ -1,0 +1,1050 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ERP.Master</name>
+    </assembly>
+    <members>
+        <member name="T:ERP.Master.Infrastructure.Data.Configurations.TenantConfiguration">
+            <summary>
+            Configuração da entidade Tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Master.Infrastructure.Data.Configurations.TenantConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{ERP.Master.Models.Tenant})">
+            <summary>
+            Configura a entidade Tenant
+            </summary>
+            <param name="builder">EntityTypeBuilder</param>
+        </member>
+        <member name="T:ERP.Master.Infrastructure.Data.MasterDbContext">
+            <summary>
+            DbContext principal para o banco ERP_MASTER
+            Contém todas as tabelas globais da plataforma
+            </summary>
+        </member>
+        <member name="M:ERP.Master.Infrastructure.Data.MasterDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ERP.Master.Infrastructure.Data.MasterDbContext})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="options">Opções do DbContext</param>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.Tenants">
+            <summary>
+            Tenants (empresas contratantes)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.Subscriptions">
+            <summary>
+            Assinaturas
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.Plans">
+            <summary>
+            Planos
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.Permissions">
+            <summary>
+            Permissões
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.RolePermissions">
+            <summary>
+            Relacionamento perfil-permissão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.UserTokens">
+            <summary>
+            Tokens de usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.UserSessions">
+            <summary>
+            Sessões de usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.LoginAttempts">
+            <summary>
+            Tentativas de login
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Infrastructure.Data.MasterDbContext.AuditLogs">
+            <summary>
+            Logs de auditoria
+            </summary>
+        </member>
+        <member name="M:ERP.Master.Infrastructure.Data.MasterDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configuração das entidades
+            </summary>
+            <param name="modelBuilder">ModelBuilder</param>
+        </member>
+        <member name="M:ERP.Master.Infrastructure.Data.MasterDbContext.ConfigureSchema(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configura o schema do banco
+            </summary>
+            <param name="modelBuilder">ModelBuilder</param>
+        </member>
+        <member name="M:ERP.Master.Infrastructure.Data.MasterDbContext.ConfigureIdentity(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Configurações específicas para Identity
+            </summary>
+            <param name="modelBuilder">ModelBuilder</param>
+        </member>
+        <member name="M:ERP.Master.Infrastructure.Data.MasterDbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
+            <summary>
+            Configurações adicionais
+            </summary>
+            <param name="optionsBuilder">DbContextOptionsBuilder</param>
+        </member>
+        <member name="T:ERP.Master.Models.AuditLog">
+            <summary>
+            Representa um log de auditoria do sistema
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.TenantId">
+            <summary>
+            ID do tenant (NULL para logs da plataforma)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.UserId">
+            <summary>
+            ID do usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.User">
+            <summary>
+            Usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.Action">
+            <summary>
+            Ação executada
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.EntityType">
+            <summary>
+            Entidade afetada
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.EntityId">
+            <summary>
+            ID da entidade afetada
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.OldValues">
+            <summary>
+            Dados antigos (JSON)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.NewValues">
+            <summary>
+            Novos dados (JSON)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.ClientIp">
+            <summary>
+            IP do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.UserAgent">
+            <summary>
+            User Agent
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.RequestUrl">
+            <summary>
+            URL da requisição
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.HttpMethod">
+            <summary>
+            Método HTTP
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.StatusCode">
+            <summary>
+            Status da resposta
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.ErrorMessage">
+            <summary>
+            Mensagem de erro
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.AuditLog.CreatedAt">
+            <summary>
+            Data da ação
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.LoginAttempt">
+            <summary>
+            Representa uma tentativa de login
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.UserId">
+            <summary>
+            ID do usuário (se conhecido)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.User">
+            <summary>
+            Usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.Username">
+            <summary>
+            E-mail ou usuário tentado
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.ClientIp">
+            <summary>
+            IP do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.UserAgent">
+            <summary>
+            User Agent
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.IsSuccess">
+            <summary>
+            Login bem-sucedido
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.WrongPassword">
+            <summary>
+            Falha por senha incorreta
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.UserNotFound">
+            <summary>
+            Falha por usuário não encontrado
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.AccountLocked">
+            <summary>
+            Falha por conta bloqueada
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.TwoFactorFailed">
+            <summary>
+            Falha por 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.ErrorMessage">
+            <summary>
+            Mensagem de erro
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.AttemptTime">
+            <summary>
+            Data da tentativa
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.LoginAttempt.TenantId">
+            <summary>
+            ID do tenant (se aplicável)
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.Permission">
+            <summary>
+            Permissão do sistema
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.Code">
+            <summary>
+            Código da permissão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.Name">
+            <summary>
+            Nome
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.Module">
+            <summary>
+            Módulo
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.Action">
+            <summary>
+            Ação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.IsActive">
+            <summary>
+            Ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Permission.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.RolePermission">
+            <summary>
+            Relacionamento perfil-permissão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.RoleId">
+            <summary>
+            ID do perfil
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.Role">
+            <summary>
+            Perfil
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.PermissionId">
+            <summary>
+            ID da permissão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.Permission">
+            <summary>
+            Permissão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.GrantedBy">
+            <summary>
+            Concedido por
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.RolePermission.GrantedAt">
+            <summary>
+            Data de concessão
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.Plan">
+            <summary>
+            Representa um plano de assinatura do ERP SaaS
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.Name">
+            <summary>
+            Nome do plano
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.Code">
+            <summary>
+            Código do plano (ex: "basic", "pro", "enterprise")
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.Description">
+            <summary>
+            Descrição do plano
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.MonthlyPrice">
+            <summary>
+            Preço mensal (em centavos)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.YearlyPrice">
+            <summary>
+            Preço anual (em centavos)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.TrialDays">
+            <summary>
+            Período de trial em dias
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.MaxUsers">
+            <summary>
+            Limite máximo de usuários
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.MaxFilials">
+            <summary>
+            Limite máximo de filiais
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.MaxStorage">
+            <summary>
+            Limite máximo de armazenamento (bytes)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.IncludedModules">
+            <summary>
+            Módulos incluídos
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.IncludedFeatures">
+            <summary>
+            Recursos incluídos
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.IsActive">
+            <summary>
+            Plano ativo
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.IsDefault">
+            <summary>
+            Plano padrão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.DisplayOrder">
+            <summary>
+            Ordem de exibição
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.UpdatedAt">
+            <summary>
+            Data de atualização
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Plan.Subscriptions">
+            <summary>
+            Assinaturas com este plano
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.ERPModules">
+            <summary>
+            Módulos disponíveis no ERP
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Sales">
+            <summary>
+            Módulo de Vendas
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Purchases">
+            <summary>
+            Módulo de Compras
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Inventory">
+            <summary>
+            Módulo de Estoque
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Fiscal">
+            <summary>
+            Módulo Fiscal
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Financial">
+            <summary>
+            Módulo Financeiro
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.CRM">
+            <summary>
+            Módulo de CRM
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.HR">
+            <summary>
+            Módulo de RH
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Reports">
+            <summary>
+            Módulo de Relatórios
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.Dashboard">
+            <summary>
+            Módulo de Dashboard
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.API">
+            <summary>
+            Módulo de API
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.ERPModules.All">
+            <summary>
+            Todos os módulos
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.Role">
+            <summary>
+            Perfil (role) do sistema
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Role.Description">
+            <summary>
+            Descrição
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Role.RolePermissions">
+            <summary>
+            Permissões do perfil
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.UserClaim">
+            <summary>
+            Claim de usuário (Identity)
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.UserRole">
+            <summary>
+            Relacionamento usuário-perfil (Identity)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserRole.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserRole.Role">
+            <summary>
+            Perfil
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.UserLogin">
+            <summary>
+            Login externo (Identity)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserLogin.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.RoleClaim">
+            <summary>
+            Claim de perfil (Identity)
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.Subscription">
+            <summary>
+            Assinatura de um tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.Tenant">
+            <summary>
+            Tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.PlanId">
+            <summary>
+            ID do plano
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.Plan">
+            <summary>
+            Plano
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.StartDate">
+            <summary>
+            Data de início
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.EndDate">
+            <summary>
+            Data de fim
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.TrialStart">
+            <summary>
+            Início do trial
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.TrialEnd">
+            <summary>
+            Fim do trial
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.PaymentMethod">
+            <summary>
+            Método de pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.PaymentStatus">
+            <summary>
+            Status do pagamento
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.MaxUsers">
+            <summary>
+            Limite máximo de usuários
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.MaxFilials">
+            <summary>
+            Limite máximo de filiais
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.MaxStorage">
+            <summary>
+            Limite máximo de armazenamento
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Subscription.UpdatedAt">
+            <summary>
+            Data de atualização
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.SubscriptionStatus">
+            <summary>
+            Status da assinatura
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.Tenant">
+            <summary>
+            Tenant (empresa contratante)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Name">
+            <summary>
+            Nome da empresa
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Cnpj">
+            <summary>
+            CNPJ
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Email">
+            <summary>
+            E-mail
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Phone">
+            <summary>
+            Telefone
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.DbName">
+            <summary>
+            Nome do banco de dados do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.ConnectionString">
+            <summary>
+            Connection string do banco do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.MaxUsers">
+            <summary>
+            Limite máximo de usuários
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.MaxStorage">
+            <summary>
+            Limite máximo de armazenamento (bytes)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.CurrentStorage">
+            <summary>
+            Armazenamento atual (bytes)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.TrialEnd">
+            <summary>
+            Fim do trial
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.SubscriptionId">
+            <summary>
+            ID da assinatura
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Subscription">
+            <summary>
+            Assinatura
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.PlanId">
+            <summary>
+            ID do plano
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Plan">
+            <summary>
+            Plano
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.EnabledModules">
+            <summary>
+            Módulos habilitados
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Settings">
+            <summary>
+            Configurações
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.UpdatedAt">
+            <summary>
+            Data de atualização
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.Tenant.Users">
+            <summary>
+            Usuários do tenant
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.TenantStatus">
+            <summary>
+            Status do tenant
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.User">
+            <summary>
+            Usuário do sistema
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.FirstName">
+            <summary>
+            Primeiro nome
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.LastName">
+            <summary>
+            Sobrenome
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.FullName">
+            <summary>
+            Nome completo
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.AvatarUrl">
+            <summary>
+            URL do avatar
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.Locale">
+            <summary>
+            Localidade (ex: pt-BR)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.Timezone">
+            <summary>
+            Fuso horário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.Status">
+            <summary>
+            Status do usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.EmailVerified">
+            <summary>
+            E-mail verificado
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.TenantId">
+            <summary>
+            ID do tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.Tenant">
+            <summary>
+            Tenant
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.TwoFactorSecret">
+            <summary>
+            Segredo do 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.TwoFactorRecoveryCodes">
+            <summary>
+            Códigos de recuperação do 2FA
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.LastLogin">
+            <summary>
+            Último login
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.LastLoginIp">
+            <summary>
+            IP do último login
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.FailedLoginAttempts">
+            <summary>
+            Tentativas de login falhas
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.UpdatedAt">
+            <summary>
+            Data de atualização
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.User.UserRoles">
+            <summary>
+            Roles do usuário
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.UserStatus">
+            <summary>
+            Status do usuário
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.UserSession">
+            <summary>
+            Representa uma sessão de usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.UserId">
+            <summary>
+            ID do usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.User">
+            <summary>
+            Usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.SessionId">
+            <summary>
+            ID da sessão
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.AccessToken">
+            <summary>
+            Token de acesso JWT
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.RefreshToken">
+            <summary>
+            Token de refresh
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.ClientIp">
+            <summary>
+            IP do cliente
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.UserAgent">
+            <summary>
+            User Agent
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.ExpiresAt">
+            <summary>
+            Data de expiração
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.IsActive">
+            <summary>
+            Sessão ativa
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.UpdatedAt">
+            <summary>
+            Data de atualização
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.TenantId">
+            <summary>
+            ID do tenant (se aplicável)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserSession.IsExpired">
+            <summary>
+            Verifica se a sessão está expirada
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.UserToken">
+            <summary>
+            Representa um token de usuário (refresh token, reset password, etc.)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.Id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.User">
+            <summary>
+            Usuário
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.Type">
+            <summary>
+            Tipo do token
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.TokenHash">
+            <summary>
+            Token (hash)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.TokenOriginal">
+            <summary>
+            Token original (para debug, opcional)
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.ExpiresAt">
+            <summary>
+            Data de expiração
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.IsRevoked">
+            <summary>
+            Token revogado
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.RevokedAt">
+            <summary>
+            Data de revogação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.RevokedReason">
+            <summary>
+            Motivo da revogação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.CreatedIp">
+            <summary>
+            IP de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.UserAgent">
+            <summary>
+            User Agent
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.CreatedAt">
+            <summary>
+            Data de criação
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.IsExpired">
+            <summary>
+            Verifica se o token está expirado
+            </summary>
+        </member>
+        <member name="P:ERP.Master.Models.UserToken.IsValid">
+            <summary>
+            Verifica se o token é válido
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Models.TokenType">
+            <summary>
+            Tipos de token
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.TokenType.RefreshToken">
+            <summary>
+            Refresh Token
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.TokenType.ResetPassword">
+            <summary>
+            Token de reset de senha
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.TokenType.ConfirmEmail">
+            <summary>
+            Token de confirmação de email
+            </summary>
+        </member>
+        <member name="F:ERP.Master.Models.TokenType.TwoFactor">
+            <summary>
+            Token de 2FA
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Services.JwtService">
+            <summary>
+            Serviço para manipulação de tokens JWT
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Services.IJwtService">
+            <summary>
+            Interface do serviço de JWT
+            </summary>
+        </member>
+        <member name="T:ERP.Master.Services.TwoFactorService">
+            <summary>
+            Serviço para autenticação de dois fatores (2FA) usando TOTP
+            </summary>
+        </member>
+    </members>
+</doc>

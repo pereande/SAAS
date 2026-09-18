@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "pF+qXkOsDFc=",
+  "dgSpecHash": "Nm32I3TkguI=",
   "success": true,
-  "projectFilePath": "/src/src/ERP.Master/ERP.Master.csproj",
+  "projectFilePath": "/app/src/ERP.Master/ERP.Master.csproj",
   "expectedPackageFiles": [
     "/root/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/root/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "/root/.nuget/packages/efcore.namingconventions/8.0.0/efcore.namingconventions.8.0.0.nupkg.sha512",
     "/root/.nuget/packages/fluentvalidation/11.5.0/fluentvalidation.11.5.0.nupkg.sha512",
     "/root/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/root/.nuget/packages/microsoft.aspnetcore.cryptography.internal/8.0.0/microsoft.aspnetcore.cryptography.internal.8.0.0.nupkg.sha512",

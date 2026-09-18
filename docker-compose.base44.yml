@@ -1,0 +1,41 @@
+services:
+  # ERP Web API (dev mode - runs from source with hot reload)
+  web:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - AppSettings__Database__MasterConnectionString=Host=erp-db;Port=5432;Database=erp_master;Username=postgres;Password=ErpSaas2024!
+      - AppSettings__Cors__AllowedOrigins__0=https://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+      - AppSettings__Cors__AllowedOrigins__1=http://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+    command: >
+      sh -c "dotnet restore src/ERP.Web/ERP.Web.csproj
+      && dotnet watch run --project src/ERP.Web/ERP.Web.csproj --urls http://0.0.0.0:80 --no-hot-reload"
+    depends_on:
+      erp-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # PostgreSQL database
+  erp-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ErpSaas2024!
+      - POSTGRES_DB=erp_master
+    volumes:
+      - erp-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d erp_master"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  erp-db-data:
