@@ -1,50 +1,60 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import Layout from './components/Layout';
-import { AuthProvider, useAuth } from './lib/auth';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Tenants from './pages/Tenants';
-import Persons from './pages/Persons';
-import Products from './pages/Products';
-import Inventory from './pages/Inventory';
-import Sales from './pages/Sales';
-import Purchases from './pages/Purchases';
+import { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import { api, type SessionUser } from "./lib/api";
 
-function RequireAuth({ children }: { children: JSX.Element }) {
-  const { user, loading } = useAuth();
-  if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center bg-slate-50 text-sm text-slate-500">
-        Carregando...
-      </div>
-    );
-  }
-  if (!user) return <Navigate to="/login" replace />;
-  return children;
-}
+function App() {
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("erp-saas-theme") === "dark");
 
-export default function App() {
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("erp-saas-theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  useEffect(() => {
+    let active = true;
+    api.getSession().then((session) => {
+      if (active) {
+        setUser(session);
+        setCheckingSession(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleLogin = (nextUser: SessionUser) => setUser(nextUser);
+  const handleLogout = () => {
+    api.logout();
+    setUser(null);
+  };
+
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          element={
-            <RequireAuth>
-              <Layout />
-            </RequireAuth>
-          }
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="tenants" element={<Tenants />} />
-          <Route path="persons" element={<Persons />} />
-          <Route path="products" element={<Products />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="sales" element={<Sales />} />
-          <Route path="purchases" element={<Purchases />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <Toaster position="top-right" />
+          {checkingSession ? (
+            <div className="app-loading">
+              <div className="brand-mark brand-mark--small">E</div>
+              <span>Carregando seu espaço de gestão…</span>
+            </div>
+          ) : user ? (
+            <Home user={user} onLogout={handleLogout} darkMode={darkMode} onToggleTheme={() => setDarkMode((value) => !value)} />
+          ) : (
+            <Login onLogin={handleLogin} />
+          )}
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
+
+export default App;

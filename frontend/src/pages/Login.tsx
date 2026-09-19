@@ -1,79 +1,68 @@
-import { FormEvent, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from '../lib/auth';
-import { btnPrimary, ErrorText, inputClass } from '../components/ui';
+import { FormEvent, useState } from "react";
+import { ArrowRight, Check, Eye, EyeOff, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
+import { toast } from "sonner";
+import { api, hasLiveApi, type SessionUser } from "@/lib/api";
 
-export default function Login() {
-  const { login, user, loading } = useAuth();
-  const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+type LoginProps = { onLogin: (user: SessionUser) => void };
 
-  if (loading) {
-    return <div className="flex h-full items-center justify-center bg-slate-100 text-sm text-slate-500">Carregando...</div>;
-  }
-  if (user) return <Navigate to="/" replace />;
+export default function Login({ onLogin }: LoginProps) {
+  const [username, setUsername] = useState("admin@erpsaas.com");
+  const [password, setPassword] = useState("Admin@123");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSubmitting(true);
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
     try {
-      await login(username, password);
-      navigate('/');
-    } catch (err: any) {
-      setError(err?.message || 'Falha no login');
+      const user = await api.login(username, password);
+      toast.success(hasLiveApi() ? "Login realizado com sucesso." : "Bem-vindo ao modo demonstração.");
+      onLogin(user);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível entrar.");
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-xl font-bold text-white shadow-lg">
-            E
-          </div>
-          <h1 className="text-2xl font-semibold text-white">ERP SaaS</h1>
-          <p className="mt-1 text-sm text-slate-400">Sistema de Gestão Empresarial Multiempresa</p>
+    <main className="login-page">
+      <section className="login-story">
+        <div className="story-grid" />
+        <div className="login-brand">
+          <div className="brand-mark">E</div>
+          <span>ERP<span className="brand-dot">.</span>flow</span>
         </div>
-        <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-6 shadow-xl">
-          <div className="space-y-4">
-            <label className="block">
-              <span className="mb-1 block text-xs font-medium text-slate-600">Usuário ou e-mail</span>
-              <input
-                className={inputClass}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin@erpsaas.com"
-                autoFocus
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1 block text-xs font-medium text-slate-600">Senha</span>
-              <input
-                type="password"
-                className={inputClass}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-              />
-            </label>
-            <ErrorText error={error} />
-            <button type="submit" className={`${btnPrimary} w-full py-2.5`} disabled={submitting}>
-              {submitting ? 'Entrando...' : 'Entrar'}
-            </button>
+        <div className="story-copy">
+          <p className="eyebrow eyebrow--light"><Sparkles size={14} /> gestão com clareza</p>
+          <h1>Seu negócio,<br /><em>em movimento.</em></h1>
+          <p className="story-description">Uma visão mais simples para decisões mais inteligentes. Reúna vendas, estoque e financeiro em um único lugar.</p>
+        </div>
+        <div className="story-footer">
+          <div className="story-proof"><span className="proof-avatars"><i>MC</i><i>RL</i><i>BS</i></span><span>+ 240 empresas crescendo juntas</span></div>
+          <span className="story-version">v1.0 • ambiente seguro</span>
+        </div>
+      </section>
+
+      <section className="login-panel">
+        <div className="login-form-wrap">
+          <div className="mobile-brand login-brand"><div className="brand-mark">E</div><span>ERP<span className="brand-dot">.</span>flow</span></div>
+          <div className="login-heading">
+            <p className="eyebrow">área restrita</p>
+            <h2>Bom ter você aqui.</h2>
+            <p>Entre para acompanhar o pulso da sua operação.</p>
           </div>
-          <div className="mt-5 rounded-lg bg-slate-50 p-3 text-xs leading-5 text-slate-500">
-            <div className="mb-0.5 font-medium text-slate-600">Contas de demonstração (senha: Admin@123)</div>
-            <div>Platforma: admin@erpsaas.com</div>
-            <div>Empresa demo: admin@demo.com.br</div>
-          </div>
-        </form>
-      </div>
-    </div>
+          <form className="login-form" onSubmit={handleSubmit}>
+            <label htmlFor="username">E-mail corporativo</label>
+            <div className="input-shell"><span className="input-prefix">@</span><input id="username" type="email" autoComplete="email" value={username} onChange={(event) => setUsername(event.target.value)} placeholder="voce@empresa.com" required /></div>
+            <div className="password-label"><label htmlFor="password">Senha</label><button type="button" className="text-button" onClick={() => toast.info("Em breve: recuperação de senha.")}>Esqueci minha senha</button></div>
+            <div className="input-shell"><LockKeyhole size={17} className="input-icon" /><input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••" required /><button type="button" className="icon-button" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
+            <button className="primary-button login-submit" type="submit" disabled={loading}>{loading ? "Entrando…" : "Entrar no ERP"}<ArrowRight size={18} /></button>
+          </form>
+          {!hasLiveApi() && <div className="demo-note"><div className="demo-note-icon"><ShieldCheck size={17} /></div><div><strong>Modo demonstração ativo</strong><p>Use os dados preenchidos para explorar o painel.</p></div><Check size={17} className="demo-check" /></div>}
+          <p className="login-legal">Ao entrar, você concorda com os <button className="text-button" onClick={() => toast.info("Termos de uso em preparação.")}>termos de uso</button> e a <button className="text-button" onClick={() => toast.info("Política de privacidade em preparação.")}>política de privacidade</button>.</p>
+        </div>
+      </section>
+    </main>
   );
 }
