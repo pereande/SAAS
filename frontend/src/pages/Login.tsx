@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
-import { ArrowRight, Check, Eye, EyeOff, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { api, hasLiveApi, type SessionUser } from "@/lib/api";
+import { api, type SessionUser } from "@/lib/api";
 
 type LoginProps = { onLogin: (user: SessionUser) => void };
 
@@ -16,7 +16,7 @@ export default function Login({ onLogin }: LoginProps) {
     setLoading(true);
     try {
       const user = await api.login(username, password);
-      toast.success(hasLiveApi() ? "Login realizado com sucesso." : "Bem-vindo ao modo demonstração.");
+      toast.success("Login realizado com sucesso.");
       onLogin(user);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível entrar.");
@@ -59,7 +59,6 @@ export default function Login({ onLogin }: LoginProps) {
             <div className="input-shell"><LockKeyhole size={17} className="input-icon" /><input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••" required /><button type="button" className="icon-button" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
             <button className="primary-button login-submit" type="submit" disabled={loading}>{loading ? "Entrando…" : "Entrar no ERP"}<ArrowRight size={18} /></button>
           </form>
-          {!hasLiveApi() && <div className="demo-note"><div className="demo-note-icon"><ShieldCheck size={17} /></div><div><strong>Modo demonstração ativo</strong><p>Use os dados preenchidos para explorar o painel.</p></div><Check size={17} className="demo-check" /></div>}
           <p className="login-legal">Ao entrar, você concorda com os <button className="text-button" onClick={() => toast.info("Termos de uso em preparação.")}>termos de uso</button> e a <button className="text-button" onClick={() => toast.info("Política de privacidade em preparação.")}>política de privacidade</button>.</p>
         </div>
       </section>

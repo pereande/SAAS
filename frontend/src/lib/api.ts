@@ -4,7 +4,6 @@ export type SessionUser = {
   email: string;
   role: string;
   initials: string;
-  demo?: boolean;
 };
 
 export type ClientRecord = {
@@ -74,8 +73,6 @@ type ApiEnvelope = {
   token?: string;
 };
 
-const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
-const TENANT_ID = import.meta.env.VITE_TENANT_ID ?? "";
 const SESSION_KEY = "erp-saas-session";
 const TOKEN_KEY = "erp-saas-token";
 
@@ -88,7 +85,14 @@ function userFromApi(payload: ApiEnvelope): SessionUser {
 
 async function requestResource<T>(resource: string, method: string, body?: unknown): Promise<T> {
   const token = localStorage.getItem(TOKEN_KEY);
-  const response = await fetch(`${API_URL}/api/${resource}`, { method, headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(TENANT_ID ? { "X-Tenant-Id": TENANT_ID } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  const response = await fetch(`/api/${resource}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
   if (!response.ok) throw new Error(`Endpoint /api/${resource} ainda não está disponível.`);
   if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
@@ -96,7 +100,11 @@ async function requestResource<T>(resource: string, method: string, body?: unkno
 
 export const api = {
   async login(username: string, password: string): Promise<SessionUser> {
-    const response = await fetch(`${API_URL}/api/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) });
+    const response = await fetch(`/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
     const payload = (await response.json().catch(() => ({}))) as ApiEnvelope;
     if (!response.ok || payload.success === false) throw new Error(payload.message || "Não foi possível entrar. Confira seus dados.");
     const token = payload.data?.token || payload.token;

@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import {
   ArrowDownRight, ArrowUpRight, BarChart3, Bell, Boxes, Building2, CalendarDays, Check, ChevronDown, CircleHelp, CreditCard, Download, FileText, LayoutDashboard, Loader2, LogOut, Menu, Moon, Package, Plus, Search, Settings, ShoppingCart, Sparkles, Store, Sun, Truck, Users, Wallet, X,
 } from "lucide-react";
-import { api, hasLiveApi, type BranchRecord, type ClientRecord, type ProductRecord, type SessionUser } from "@/lib/api";
+import { api, type BranchRecord, type ClientRecord, type ProductRecord, type SessionUser } from "@/lib/api";
 
 type HomeProps = { user: SessionUser; onLogout: () => void; darkMode: boolean; onToggleTheme: () => void };
 type NavItem = { label: string; icon: typeof LayoutDashboard; section?: string; live?: boolean };
@@ -130,7 +130,6 @@ function isValidCnpj(value: string) {
 }
 
 function Branches() {
-  const tenantId = import.meta.env.VITE_TENANT_ID ?? "";
   const [branches, setBranches] = useState<BranchRecord[]>(() => {
     const saved = localStorage.getItem("erp-saas-branches");
     return saved ? JSON.parse(saved) : [];
@@ -145,7 +144,6 @@ function Branches() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (!hasLiveApi()) return;
     api.listBranches().then((items) => {
       setBranches(items);
       localStorage.setItem("erp-saas-branches", JSON.stringify(items));
@@ -189,18 +187,13 @@ function Branches() {
 
   async function saveBranch(event: FormEvent) {
     event.preventDefault();
-    if (!tenantId) { toast.error("VITE_TENANT_ID não está configurado."); return; }
     if (!validate()) { toast.error("Corrija os campos destacados antes de salvar."); return; }
     if (!editing && form.code.toLowerCase() === "matriz" && mainBranch) { toast.error("Já existe uma filial principal ativa para este tenant."); return; }
     setSaving(true);
     const payload = { ...form, cnpj: form.cnpj || undefined, city: form.city || undefined, state: form.state.toUpperCase() || undefined, isHeadquarters: editing?.isHeadquarters ?? true };
     try {
       let saved: BranchRecord;
-      if (hasLiveApi()) {
-        saved = editing ? await api.updateBranch(editing.id, payload) : await api.createBranch(payload);
-      } else {
-        saved = { id: editing?.id ?? `local-branch-${Date.now()}`, ...payload, cnpj: payload.cnpj || null, city: payload.city || null, state: payload.state || null, isActive: editing?.isActive ?? true };
-      }
+      saved = editing ? await api.updateBranch(editing.id, payload) : await api.createBranch(payload);
       const next = editing ? branches.map((item) => item.id === editing.id ? saved : item) : [saved, ...branches];
       setBranches(next);
       localStorage.setItem("erp-saas-branches", JSON.stringify(next));
@@ -215,7 +208,7 @@ function Branches() {
   async function removeBranch(branch: BranchRecord) {
     if (!window.confirm(`Excluir a filial ${branch.name}? Esta ação não poderá ser desfeita.`)) return;
     try {
-      if (hasLiveApi()) await api.deleteBranch(branch.id);
+      await api.deleteBranch(branch.id);
       const next = branches.filter((item) => item.id !== branch.id);
       setBranches(next);
       localStorage.setItem("erp-saas-branches", JSON.stringify(next));
@@ -225,7 +218,7 @@ function Branches() {
   }
 
   return <div className="customers-page"><div className="customers-heading"><div><p className="eyebrow">estrutura da empresa</p><h2>Filiais</h2><p className="page-subtitle">Gerencie as filiais vinculadas ao tenant atual.</p></div><button className="primary-button" onClick={openCreate}><Plus size={17} />Cadastrar filial</button></div>
-    <div className="panel" style={{ marginBottom: 18 }}><div className="form-title"><div className="quick-icon quick-icon--blue"><Building2 size={18} /></div><div><strong>Vínculo seguro</strong><span>Tenant: {tenantId || "não configurado"}</span></div></div><p className="page-subtitle" style={{ margin: "12px 0 0" }}>O tenant é enviado automaticamente no header <strong>X-Tenant-Id</strong>. A filial principal é identificada pelo sistema.</p></div>
+    <div className="panel" style={{ marginBottom: 18 }}><div className="form-title"><div className="quick-icon quick-icon--blue"><Building2 size={18} /></div><div><strong>Vínculo seguro</strong><span>Tenant resolvido via token de autenticação</span></div></div><p className="page-subtitle" style={{ margin: "12px 0 0" }}>O tenant é identificado automaticamente pelo JWT. A filial principal é identificada pelo sistema.</p></div>
     {formOpen && <form className="customer-form panel" onSubmit={saveBranch} noValidate><div className="form-title"><div className="quick-icon quick-icon--green"><Store size={18} /></div><div><strong>{editing ? "Editar filial" : "Nova filial principal"}</strong><span>Os campos com erro aparecem destacados.</span></div></div><div className="form-grid"><Field label="Código" value={form.code} placeholder="Matriz" onChange={(value) => updateForm("code", value)} required error={errors.code} /><Field label="Nome da filial" value={form.name} placeholder="Casa Nativa Matriz" onChange={(value) => updateForm("name", value)} required error={errors.name} /><Field label="CNPJ" value={form.cnpj} placeholder="00.000.000/0000-00" onChange={(value) => updateForm("cnpj", value)} error={errors.cnpj} /><Field label="Cidade" value={form.city} placeholder="São Paulo" onChange={(value) => updateForm("city", value)} /><Field label="UF" value={form.state} placeholder="SP" onChange={(value) => updateForm("state", value)} error={errors.state} /></div><div className="form-actions"><button type="button" className="secondary-button" onClick={() => setFormOpen(false)}>Cancelar</button><button className="primary-button" type="submit" disabled={saving}>{saving ? <><Loader2 size={16} className="spin" />Salvando…</> : <><Check size={16} />{editing ? "Atualizar filial" : "Salvar filial principal"}</>}</button></div></form>}
     <section className="panel customer-list"><div className="customer-list-top"><div><p className="eyebrow">cadastro ativo</p><h3>{filtered.length} filial(is) encontrada(s)</h3></div><div className="customer-search"><Search size={16} /><input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="Buscar filial…" /></div></div><div className="customer-table"><div className="customer-table-head"><span>Filial</span><span>CNPJ</span><span>Localização</span><span>Tipo</span><span>Ações</span></div>{visible.map((branch) => <div className="customer-row" key={branch.id}><div className="customer-person"><div className="quick-icon quick-icon--green"><Store size={16} /></div><div><strong>{branch.name}</strong><span>{branch.code}</span></div></div><span className="customer-contact">{branch.cnpj || "Não informado"}</span><span className="customer-company">{branch.city || "—"}{branch.state ? ` / ${branch.state}` : ""}</span><span className="status-pill status-pill--active">{branch.isHeadquarters ? "Matriz" : "Filial"}</span><span className="row-actions"><button className="row-action" onClick={() => openEdit(branch)} aria-label={`Editar ${branch.name}`}>Editar</button><button className="row-action row-action--danger" onClick={() => removeBranch(branch)} aria-label={`Excluir ${branch.name}`}>Excluir</button></span></div>)}{visible.length === 0 && <div className="empty-state">Nenhuma filial encontrada.</div>}</div><div className="form-actions" style={{ justifyContent: "space-between" }}><span className="page-subtitle">Página {page} de {totalPages}</span><div><button className="secondary-button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>Anterior</button><button className="secondary-button" disabled={page === totalPages} onClick={() => setPage((current) => current + 1)} style={{ marginLeft: 8 }}>Próxima</button></div></div></section>
   </div>;
@@ -250,7 +243,7 @@ function Customers() {
   const [editing, setEditing] = useState<Customer | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", company: "" });
-  useEffect(() => { if (!hasLiveApi()) return; api.listClients().then((items) => { setCustomers(items); localStorage.setItem("erp-saas-customers", JSON.stringify(items)); }).catch(() => toast.info("API de clientes indisponível; exibindo dados locais.")); }, []);
+  useEffect(() => { api.listClients().then((items) => { setCustomers(items); localStorage.setItem("erp-saas-customers", JSON.stringify(items)); }).catch(() => toast.info("API de clientes indisponível; exibindo dados locais.")); }, []);
   const filtered = customers.filter((customer) => `${customer.name} ${customer.email} ${customer.company}`.toLowerCase().includes(query.toLowerCase()));
   function updateForm(key: keyof typeof form, value: string) { setForm((current) => ({ ...current, [key]: value })); }
   function openEdit(customer: Customer) { setEditing(customer); setForm({ name: customer.name, email: customer.email, phone: customer.phone, company: customer.company ?? "" }); setFormOpen(true); }
@@ -259,7 +252,7 @@ function Customers() {
     const payload = { ...form };
     try {
       let saved: Customer = { id: editing?.id ?? `local-client-${Date.now()}`, code: editing?.code ?? `CLI-${Date.now()}`, status: editing?.status ?? "Ativo", ...payload };
-      if (hasLiveApi()) saved = editing ? await api.updateClient(editing.id, payload) : await api.createClient(payload);
+      saved = editing ? await api.updateClient(editing.id, payload) : await api.createClient(payload);
       const next = editing ? customers.map((item) => item.id === editing.id ? saved : item) : [saved, ...customers];
       setCustomers(next); localStorage.setItem("erp-saas-customers", JSON.stringify(next)); setForm({ name: "", email: "", phone: "", company: "" }); setEditing(null); setFormOpen(false); toast.success(editing ? "Cliente atualizado." : "Cliente cadastrado com sucesso.");
     } catch (error) { toast.error(error instanceof Error ? `${error.message} O registro local foi mantido como rascunho.` : "Não foi possível salvar."); }
@@ -267,7 +260,7 @@ function Customers() {
   }
   async function removeCustomer(customer: Customer) {
     if (!window.confirm(`Excluir ${customer.name}?`)) return;
-    try { if (hasLiveApi()) await api.deleteClient(customer.id); const next = customers.filter((item) => item.id !== customer.id); setCustomers(next); localStorage.setItem("erp-saas-customers", JSON.stringify(next)); toast.success("Cliente excluído."); } catch (error) { toast.error(error instanceof Error ? error.message : "Não foi possível excluir."); }
+    try { await api.deleteClient(customer.id); const next = customers.filter((item) => item.id !== customer.id); setCustomers(next); localStorage.setItem("erp-saas-customers", JSON.stringify(next)); toast.success("Cliente excluído."); } catch (error) { toast.error(error instanceof Error ? error.message : "Não foi possível excluir."); }
   }
   function cancelEdit() { setFormOpen(false); setEditing(null); setForm({ name: "", email: "", phone: "", company: "" }); }
   function exportCustomers() { downloadCsv("clientes.csv", ["Nome", "E-mail", "Telefone", "Empresa", "Status"], filtered.map((customer) => [customer.name, customer.email, customer.phone, customer.company, customer.status])); toast.success(`${filtered.length} cliente(s) exportado(s).`); }
@@ -278,9 +271,9 @@ function Products() {
   const [products, setProducts] = useState<ProductRecord[]>(() => { const saved = localStorage.getItem("erp-saas-products"); return saved ? JSON.parse(saved) : initialProducts; });
   const [formOpen, setFormOpen] = useState(false); const [saving, setSaving] = useState(false); const [query, setQuery] = useState("");
   const [form, setForm] = useState({ name: "", sku: "", category: "", price: "", stock: "" });
-  useEffect(() => { if (!hasLiveApi()) return; api.listProducts().then((items) => { setProducts(items); localStorage.setItem("erp-saas-products", JSON.stringify(items)); }).catch(() => toast.info("API de produtos indisponível; exibindo dados locais.")); }, []);
+  useEffect(() => { api.listProducts().then((items) => { setProducts(items); localStorage.setItem("erp-saas-products", JSON.stringify(items)); }).catch(() => toast.info("API de produtos indisponível; exibindo dados locais.")); }, []);
   const filtered = products.filter((product) => `${product.name} ${product.sku} ${product.category}`.toLowerCase().includes(query.toLowerCase()));
-  async function saveProduct(event: FormEvent) { event.preventDefault(); setSaving(true); const payload = { name: form.name, sku: form.sku, category: form.category || undefined, price: Number(form.price), stock: Number(form.stock) }; try { let saved: ProductRecord = { id: `local-product-${Date.now()}`, ...payload, category: form.category || null, active: true }; if (hasLiveApi()) saved = await api.createProduct(payload); const next = [saved, ...products]; setProducts(next); localStorage.setItem("erp-saas-products", JSON.stringify(next)); setForm({ name: "", sku: "", category: "", price: "", stock: "" }); setFormOpen(false); toast.success("Produto adicionado ao estoque."); } catch (error) { toast.error(error instanceof Error ? `${error.message} O item foi salvo localmente.` : "Não foi possível salvar."); } finally { setSaving(false); } }
+  async function saveProduct(event: FormEvent) { event.preventDefault(); setSaving(true); const payload = { name: form.name, sku: form.sku, category: form.category || undefined, price: Number(form.price), stock: Number(form.stock) }; try { let saved: ProductRecord = await api.createProduct(payload); const next = [saved, ...products]; setProducts(next); localStorage.setItem("erp-saas-products", JSON.stringify(next)); setForm({ name: "", sku: "", category: "", price: "", stock: "" }); setFormOpen(false); toast.success("Produto adicionado ao estoque."); } catch (error) { toast.error(error instanceof Error ? `${error.message} O item foi salvo localmente.` : "Não foi possível salvar."); } finally { setSaving(false); } }
   function updateForm(key: keyof typeof form, value: string) { setForm((current) => ({ ...current, [key]: value })); }
   function exportProducts() { downloadCsv("produtos.csv", ["Nome", "SKU", "Categoria", "Preço", "Estoque"], filtered.map((product) => [product.name, product.sku, product.category, product.price.toFixed(2).replace(".", ","), product.stock])); toast.success(`${filtered.length} produto(s) exportado(s).`); }
   return <div className="customers-page"><div className="customers-heading"><div><p className="eyebrow">inventário</p><h2>Produtos</h2><p className="page-subtitle">Cadastre itens e acompanhe o saldo disponível.</p></div><div className="heading-actions"><button className="secondary-button" onClick={exportProducts} disabled={filtered.length === 0}><Download size={16} />Exportar CSV</button><button className="primary-button" onClick={() => setFormOpen((open) => !open)}><Plus size={17} />{formOpen ? "Fechar formulário" : "Adicionar produto"}</button></div></div>{formOpen && <form className="customer-form panel" onSubmit={saveProduct}><div className="form-title"><div className="quick-icon quick-icon--amber"><Package size={18} /></div><div><strong>Novo produto</strong><span>O item aparecerá no seu estoque imediatamente.</span></div></div><div className="form-grid"><Field label="Nome do produto" value={form.name} placeholder="Ex.: Café especial 250g" onChange={(value) => updateForm("name", value)} required /><Field label="SKU" value={form.sku} placeholder="CAF-250-001" onChange={(value) => updateForm("sku", value)} required /><Field label="Categoria" value={form.category} placeholder="Alimentos" onChange={(value) => updateForm("category", value)} required /><Field label="Preço (R$)" value={form.price} placeholder="0,00" type="number" onChange={(value) => updateForm("price", value)} required /><Field label="Quantidade inicial" value={form.stock} placeholder="0" type="number" onChange={(value) => updateForm("stock", value)} required /></div><div className="form-actions"><button type="button" className="secondary-button" onClick={() => setFormOpen(false)}>Cancelar</button><button className="primary-button" type="submit" disabled={saving}>{saving ? <><Loader2 size={16} className="spin" />Salvando…</> : <><Check size={16} />Salvar produto</>}</button></div></form>}<section className="panel customer-list"><div className="customer-list-top"><div><p className="eyebrow">estoque atual</p><h3>{products.length} produtos cadastrados</h3></div><div className="customer-search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar produto…" /></div></div><div className="customer-table product-table"><div className="customer-table-head"><span>Produto</span><span>SKU</span><span>Categoria</span><span>Preço</span><span>Saldo</span></div>{filtered.map((product) => <div className="customer-row" key={product.id}><div className="customer-person"><div className="quick-icon quick-icon--amber"><Package size={16} /></div><div><strong>{product.name}</strong><span>Atualizado agora</span></div></div><span className="customer-contact">{product.sku}</span><span className="customer-company">{product.category}</span><span className="customer-contact">R$ {product.price.toFixed(2).replace(".", ",")}</span><span className={product.stock < 10 ? "stock-low" : "stock-ok"}>{product.stock} un.</span></div>)}{filtered.length === 0 && <div className="empty-state">Nenhum produto encontrado.</div>}</div></section></div>;
