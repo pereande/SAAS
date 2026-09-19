@@ -267,6 +267,11 @@
             ID
             </summary>
         </member>
+        <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.TenantId">
+            <summary>
+            ID do tenant (null para administradores da plataforma)
+            </summary>
+        </member>
         <member name="P:ERP.Web.Controllers.AuthDtos.UserDto.Username">
             <summary>
             Usuário
@@ -510,12 +515,247 @@
             Tem próxima página
             </summary>
         </member>
+        <member name="T:ERP.Web.Controllers.InventoryController">
+            <summary>
+            Controller para estoque (módulo Estoque)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.InventoryController.#ctor(ERP.Tenant.Infrastructure.Data.TenantDbContext,ERP.Web.Services.InventoryService,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.InventoryController})">
+            <summary>
+            Construtor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.InventoryController.GetAll(ERP.Web.Controllers.InventoryDtos.GetInventoryRequest)">
+            <summary>
+            Lista o estoque dos produtos do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.InventoryController.GetMovements(ERP.Web.Controllers.InventoryDtos.GetMovementsRequest)">
+            <summary>
+            Lista as movimentações de estoque do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.InventoryController.Adjust(ERP.Web.Controllers.InventoryDtos.AdjustInventoryRequest)">
+            <summary>
+            Faz um ajuste manual de estoque (entrada ou saída)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.InventoryDtos">
+            <summary>
+            DTOs de estoque
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.InventoryDtos.AdjustInventoryRequest.ProductId">
+            <summary>
+            ID do produto
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.InventoryDtos.AdjustInventoryRequest.BranchId">
+            <summary>
+            ID da filial (opcional, usa a matriz se não informado)
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.InventoryDtos.AdjustInventoryRequest.Type">
+            <summary>
+            Tipo do ajuste: "in" (entrada) ou "out" (saída)
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.InventoryDtos.AdjustInventoryRequest.Quantity">
+            <summary>
+            Quantidade
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.InventoryDtos.AdjustInventoryRequest.Description">
+            <summary>
+            Descrição do ajuste
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.PersonsController">
+            <summary>
+            Controller para clientes e fornecedores (módulo Cadastros)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PersonsController.#ctor(ERP.Tenant.Infrastructure.Data.TenantDbContext,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.PersonsController})">
+            <summary>
+            Construtor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PersonsController.GetAll(ERP.Web.Controllers.PersonDtos.GetPersonsRequest)">
+            <summary>
+            Lista clientes ou fornecedores do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PersonsController.Create(ERP.Web.Controllers.PersonDtos.CreatePersonRequest)">
+            <summary>
+            Cria um cliente ou fornecedor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PersonsController.Delete(System.Guid,System.String)">
+            <summary>
+            Desativa um cliente ou fornecedor (soft delete)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.PersonDtos">
+            <summary>
+            DTOs de pessoas
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PersonDtos.GetPersonsRequest.Type">
+            <summary>
+            Tipo: "client" ou "supplier"
+            </summary>
+        </member>
+        <member name="P:ERP.Web.Controllers.PersonDtos.CreatePersonRequest.Type">
+            <summary>
+            Tipo: "client" ou "supplier"
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.ProductsController">
+            <summary>
+            Controller para produtos (módulo Estoque)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.ProductsController.#ctor(ERP.Tenant.Infrastructure.Data.TenantDbContext,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.ProductsController})">
+            <summary>
+            Construtor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.ProductsController.GetAll(ERP.Web.Controllers.ProductDtos.GetProductsRequest)">
+            <summary>
+            Lista os produtos do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.ProductsController.GetById(System.Guid)">
+            <summary>
+            Obtém um produto pelo ID
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.ProductsController.Create(ERP.Web.Controllers.ProductDtos.CreateProductRequest)">
+            <summary>
+            Cria um produto
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.ProductsController.Update(System.Guid,ERP.Web.Controllers.ProductDtos.UpdateProductRequest)">
+            <summary>
+            Atualiza um produto
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.ProductsController.Delete(System.Guid)">
+            <summary>
+            Desativa um produto (soft delete)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.ProductDtos">
+            <summary>
+            DTOs de produtos
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.PurchasesController">
+            <summary>
+            Controller para compras (módulo Compras)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.#ctor(ERP.Tenant.Infrastructure.Data.TenantDbContext,ERP.Web.Services.InventoryService,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.PurchasesController})">
+            <summary>
+            Construtor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.GetAll(ERP.Web.Controllers.PurchaseDtos.GetPurchasesRequest)">
+            <summary>
+            Lista as compras do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.GetById(System.Guid)">
+            <summary>
+            Obtém uma compra pelo ID (com itens)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.Create(ERP.Web.Controllers.PurchaseDtos.CreatePurchaseRequest)">
+            <summary>
+            Cria uma compra (status Rascunho)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.Confirm(System.Guid)">
+            <summary>
+            Confirma uma compra
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.Receive(System.Guid)">
+            <summary>
+            Recebe uma compra confirmada (dá entrada no estoque)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.Cancel(System.Guid,ERP.Web.Controllers.PurchaseDtos.CancelPurchaseRequest)">
+            <summary>
+            Cancela uma compra
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.PurchasesController.Delete(System.Guid)">
+            <summary>
+            Exclui uma compra (apenas rascunhos)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.PurchaseDtos">
+            <summary>
+            DTOs de compras
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.SalesController">
+            <summary>
+            Controller para vendas (módulo Vendas)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.#ctor(ERP.Tenant.Infrastructure.Data.TenantDbContext,ERP.Web.Services.InventoryService,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.SalesController})">
+            <summary>
+            Construtor
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.GetAll(ERP.Web.Controllers.SaleDtos.GetSalesRequest)">
+            <summary>
+            Lista as vendas do tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.GetById(System.Guid)">
+            <summary>
+            Obtém uma venda pelo ID (com itens)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.Create(ERP.Web.Controllers.SaleDtos.CreateSaleRequest)">
+            <summary>
+            Cria uma venda (status Rascunho)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.Update(System.Guid,ERP.Web.Controllers.SaleDtos.CreateSaleRequest)">
+            <summary>
+            Atualiza uma venda (apenas rascunhos)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.Confirm(System.Guid)">
+            <summary>
+            Confirma uma venda (baixa estoque)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.Cancel(System.Guid,ERP.Web.Controllers.SaleDtos.CancelSaleRequest)">
+            <summary>
+            Cancela uma venda (devolve estoque se confirmada)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.SalesController.Delete(System.Guid)">
+            <summary>
+            Exclui uma venda (apenas rascunhos)
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Controllers.SaleDtos">
+            <summary>
+            DTOs de vendas
+            </summary>
+        </member>
         <member name="T:ERP.Web.Controllers.TenantsController">
             <summary>
             Controller para gerenciamento de tenants
             </summary>
         </member>
-        <member name="M:ERP.Web.Controllers.TenantsController.#ctor(ERP.Master.Infrastructure.Data.MasterDbContext,Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.TenantsController})">
+        <member name="M:ERP.Web.Controllers.TenantsController.#ctor(ERP.Master.Infrastructure.Data.MasterDbContext,Microsoft.AspNetCore.Identity.UserManager{ERP.Master.Models.User},ERP.Web.Services.TenantDatabaseInitializer,Microsoft.Extensions.Options.IOptions{ERP.Shared.Settings.DatabaseSettings},Microsoft.Extensions.Logging.ILogger{ERP.Web.Controllers.TenantsController})">
             <summary>
             Construtor
             </summary>
@@ -543,6 +783,38 @@
         <member name="M:ERP.Web.Controllers.TenantsController.Delete(System.Guid)">
             <summary>
             Deleta um tenant (soft delete)
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Controllers.TenantsController.AddUserToRoleAsync(ERP.Master.Models.User,System.String)">
+            <summary>
+            Vincula um usuário a um perfil.
+            Nota: UserManager.AddToRoleAsync não pode ser usado porque UserRole tem PK única
+            (Id) e o UserStore do Identity espera chave composta (UserId + RoleId).
+            </summary>
+        </member>
+        <member name="T:ERP.Web.Infrastructure.DbSeeder">
+            <summary>
+            Inicializa o banco master com os dados essenciais:
+            perfis, permissões, planos, usuário admin da plataforma e tenant de demonstração.
+            Executado no startup, é idempotente (não duplica dados).
+            </summary>
+        </member>
+        <member name="F:ERP.Web.Infrastructure.DbSeeder.DefaultPassword">
+            <summary>
+            Senha padrão dos usuários de demonstração
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Infrastructure.DbSeeder.SeedAsync(System.IServiceProvider)">
+            <summary>
+            Executa todo o seed do banco master
+            </summary>
+            <param name="services">Service provider do escopo atual</param>
+        </member>
+        <member name="M:ERP.Web.Infrastructure.DbSeeder.AddUserToRoleAsync(ERP.Master.Infrastructure.Data.MasterDbContext,ERP.Master.Models.User,System.String)">
+            <summary>
+            Vincula um usuário a um perfil.
+            Nota: UserManager.AddToRoleAsync não pode ser usado porque UserRole tem PK única
+            (Id) e o UserStore do Identity espera chave composta (UserId + RoleId).
             </summary>
         </member>
         <member name="T:ERP.Web.Middleware.AuditMiddleware">
@@ -908,6 +1180,71 @@
             </summary>
             <param name="builder">IApplicationBuilder</param>
             <returns>IApplicationBuilder</returns>
+        </member>
+        <member name="T:ERP.Web.Services.InventoryService">
+            <summary>
+            Serviço de movimentação de estoque do tenant atual
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Services.InventoryService.#ctor(ERP.Tenant.Infrastructure.Data.TenantDbContext)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="db">DbContext do tenant</param>
+        </member>
+        <member name="M:ERP.Web.Services.InventoryService.HasAvailableStockAsync(System.Guid,System.Guid,System.Decimal)">
+            <summary>
+            Verifica se há estoque disponível suficiente de um produto em uma filial
+            </summary>
+            <param name="branchId">ID da filial</param>
+            <param name="productId">ID do produto</param>
+            <param name="quantity">Quantidade necessária</param>
+            <returns>True se houver estoque disponível</returns>
+        </member>
+        <member name="M:ERP.Web.Services.InventoryService.ApplyMovementAsync(System.Guid,System.Guid,ERP.Tenant.Models.InventoryMovementType,System.Decimal,System.String,System.Nullable{System.Guid},System.Nullable{System.Guid},System.String)">
+            <summary>
+            Registra uma movimentação de estoque e atualiza o saldo do produto na filial.
+            A persistência fica a cargo do chamador (SaveChangesAsync).
+            </summary>
+            <param name="branchId">ID da filial</param>
+            <param name="productId">ID do produto</param>
+            <param name="movementType">Tipo de movimento (entrada ou saída)</param>
+            <param name="quantity">Quantidade movimentada</param>
+            <param name="description">Descrição da movimentação</param>
+            <param name="saleId">ID da venda (se aplicável)</param>
+            <param name="purchaseId">ID da compra (se aplicável)</param>
+            <param name="userId">ID do usuário responsável</param>
+        </member>
+        <member name="T:ERP.Web.Services.TenantDatabaseInitializer">
+            <summary>
+            Serviço responsável por criar e inicializar o banco de dados de um tenant
+            </summary>
+        </member>
+        <member name="M:ERP.Web.Services.TenantDatabaseInitializer.#ctor(Microsoft.Extensions.Options.IOptions{ERP.Shared.Settings.DatabaseSettings},Microsoft.Extensions.Logging.ILogger{ERP.Web.Services.TenantDatabaseInitializer})">
+            <summary>
+            Construtor
+            </summary>
+            <param name="dbSettings">Configurações de banco de dados</param>
+            <param name="logger">Logger</param>
+        </member>
+        <member name="M:ERP.Web.Services.TenantDatabaseInitializer.EnsureTenantDatabaseAsync(ERP.Master.Models.Tenant)">
+            <summary>
+            Garante que o banco de dados do tenant exista (banco + schema + dados iniciais)
+            </summary>
+            <param name="tenant">Tenant</param>
+        </member>
+        <member name="M:ERP.Web.Services.TenantDatabaseInitializer.EnsureDatabaseExistsAsync(System.String)">
+            <summary>
+            Cria o banco de dados do tenant se ainda não existir
+            </summary>
+            <param name="dbName">Nome do banco</param>
+        </member>
+        <member name="M:ERP.Web.Services.TenantDatabaseInitializer.SeedTenantDataAsync(ERP.Tenant.Infrastructure.Data.TenantDbContext,ERP.Master.Models.Tenant)">
+            <summary>
+            Insere os dados iniciais do tenant (empresa, filial matriz e registros de demonstração)
+            </summary>
+            <param name="context">DbContext do tenant</param>
+            <param name="tenant">Tenant</param>
         </member>
     </members>
 </doc>

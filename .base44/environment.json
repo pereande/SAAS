@@ -1,1 +1,6 @@
-{"previewPort": 3000, "healthPath": "/swagger", "startCommand": "docker compose -f docker-compose.base44.yml up -d", "secrets": []}
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": []
+}

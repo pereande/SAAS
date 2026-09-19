@@ -4,11 +4,17 @@ using System.Threading.Tasks;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Shared.Constants;
+using ERP.Shared.Exceptions;
+using ERP.Shared.Settings;
+using ERP.Web.Services;
 using static ERP.Web.Controllers.TenantDtos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace ERP.Web.Controllers;
 
@@ -20,14 +26,25 @@ namespace ERP.Web.Controllers;
 public class TenantsController : BaseController
 {
     private readonly MasterDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
+    private readonly TenantDatabaseInitializer _tenantDbInitializer;
+    private readonly DatabaseSettings _dbSettings;
     private readonly ILogger<TenantsController> _logger;
 
     /// <summary>
     /// Construtor
     /// </summary>
-    public TenantsController(MasterDbContext dbContext, ILogger<TenantsController> logger)
+    public TenantsController(
+        MasterDbContext dbContext,
+        UserManager<User> userManager,
+        TenantDatabaseInitializer tenantDbInitializer,
+        IOptions<DatabaseSettings> dbSettings,
+        ILogger<TenantsController> logger)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
+        _tenantDbInitializer = tenantDbInitializer;
+        _dbSettings = dbSettings.Value;
         _logger = logger;
     }
 
@@ -146,6 +163,9 @@ public class TenantsController : BaseController
 
             await _dbContext.Tenants.AddAsync(tenant);
             await _dbContext.SaveChangesAsync();
+
+            // Criar o banco de dados do tenant (schema + dados iniciais)
+            await _tenantDbInitializer.EnsureTenantDatabaseAsync(tenant);
 
             if (request.AdminUser != null)
                 await CreateTenantAdminUserAsync(tenant, request.AdminUser);
@@ -295,16 +315,99 @@ public class TenantsController : BaseController
     };
 
     private string GetTenantConnectionString(string dbName) =>
-        "Host=erp-db;Port=5432;Database=" + dbName + ";Username=postgres;Password=postgres";
+        new NpgsqlConnectionStringBuilder(_dbSettings.MasterConnectionString)
+        {
+            Database = dbName
+        }.ConnectionString;
 
     private async Task CreateTenantAdminUserAsync(ERP.Master.Models.Tenant tenant, CreateTenantUserRequest adminUser)
     {
-        // Implementation for creating admin user
+        var user = new User
+        {
+            UserName = adminUser.Username,
+            Email = adminUser.Email,
+            EmailVerified = true,
+            Status = UserStatus.Active,
+            TenantId = tenant.Id,
+            FirstName = string.IsNullOrWhiteSpace(adminUser.FirstName) ? "Admin" : adminUser.FirstName,
+            LastName = adminUser.LastName,
+            PhoneNumber = adminUser.Phone
+        };
+
+        var result = await _userManager.CreateAsync(user, adminUser.Password);
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors
+                .GroupBy(e => e.Code ?? "identity")
+                .ToDictionary(g => g.Key, g => g.Select(e => e.Description).ToList());
+            throw new ValidationException("Failed to create tenant admin user", errors);
+        }
+
+        var roles = adminUser.Roles != null && adminUser.Roles.Count > 0
+            ? adminUser.Roles
+            : new List<string> { "TenantAdmin" };
+
+        foreach (var role in roles)
+        {
+            await AddUserToRoleAsync(user, role);
+        }
+
+        await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation("Tenant admin user created: {Email} (tenant {TenantId})", adminUser.Email, tenant.Id);
+    }
+
+    /// <summary>
+    /// Vincula um usuário a um perfil.
+    /// Nota: UserManager.AddToRoleAsync não pode ser usado porque UserRole tem PK única
+    /// (Id) e o UserStore do Identity espera chave composta (UserId + RoleId).
+    /// </summary>
+    private async Task AddUserToRoleAsync(User user, string roleName)
+    {
+        var normalizedRole = roleName.ToUpperInvariant();
+        var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRole);
+        if (role == null)
+        {
+            return;
+        }
+
+        var exists = await _dbContext.UserRoles.AnyAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
+        if (!exists)
+        {
+            await _dbContext.UserRoles.AddAsync(new UserRole { UserId = user.Id, RoleId = role.Id });
+        }
     }
 
     private async Task CreateTenantSubscriptionAsync(ERP.Master.Models.Tenant tenant, CreateSubscriptionRequest subscription)
     {
-        // Implementation for creating subscription
+        var plan = await _dbContext.Plans.FirstOrDefaultAsync(p => p.Id == subscription.PlanId);
+        if (plan == null)
+        {
+            _logger.LogWarning("Plan {PlanId} not found for tenant subscription", subscription.PlanId);
+            return;
+        }
+
+        var entity = new Subscription
+        {
+            TenantId = tenant.Id,
+            PlanId = subscription.PlanId,
+            Status = subscription.TrialDays.HasValue ? SubscriptionStatus.Trialing : SubscriptionStatus.Active,
+            StartDate = subscription.StartDate,
+            TrialStart = subscription.TrialDays.HasValue ? DateTime.UtcNow : null,
+            TrialEnd = subscription.TrialDays.HasValue ? DateTime.UtcNow.AddDays(subscription.TrialDays.Value) : null,
+            MaxUsers = plan.MaxUsers,
+            MaxFilials = plan.MaxFilials,
+            MaxStorage = plan.MaxStorage
+        };
+
+        await _dbContext.Subscriptions.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
+
+        tenant.SubscriptionId = entity.Id;
+        tenant.PlanId = entity.PlanId;
+        await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation("Subscription {SubscriptionId} created for tenant {TenantId}", entity.Id, tenant.Id);
     }
 }
 

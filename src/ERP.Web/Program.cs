@@ -3,8 +3,13 @@ using ERP.Master.Infrastructure;
 using ERP.Master.Infrastructure.Data;
 using ERP.Master.Models;
 using ERP.Master.Services;
+using ERP.Shared.Exceptions;
 using ERP.Shared.Interfaces;
 using ERP.Shared.Settings;
+using ERP.Tenant.Infrastructure.Data;
+using ERP.Web.Infrastructure;
+using ERP.Web.Middleware;
+using ERP.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -146,6 +151,30 @@ try
     // Services
     builder.Services.AddScoped<IJwtService, JwtService>();
     builder.Services.AddScoped<TwoFactorService>();
+    builder.Services.AddScoped<TenantDatabaseInitializer>();
+    builder.Services.AddScoped<InventoryService>();
+    builder.Services.AddHttpContextAccessor();
+
+    // DbContext do tenant: resolvido a partir do tenant da requisição
+    // (header X-Tenant-Id ou claim tenant_id do token JWT)
+    builder.Services.AddScoped<TenantDbContext>(sp =>
+    {
+        var httpContext = sp.GetRequiredService<IHttpContextAccessor>().HttpContext
+            ?? throw new InvalidOperationException("TenantDbContext requires an HTTP request context.");
+
+        var tenantId = httpContext.GetTenantId()
+            ?? throw new BadRequestException("Tenant not specified. Provide the X-Tenant-Id header or authenticate with a tenant user.");
+
+        var masterDb = sp.GetRequiredService<ERP.Master.Infrastructure.Data.MasterDbContext>();
+        var tenant = masterDb.Tenants.AsNoTracking().FirstOrDefault(t => t.Id == tenantId)
+            ?? throw new BadRequestException("Invalid tenant. The specified tenant does not exist.");
+
+        var options = new DbContextOptionsBuilder<TenantDbContext>()
+            .UseNpgsql(tenant.ConnectionString)
+            .Options;
+
+        return new TenantDbContext(options, tenant.Id, tenant.Name);
+    });
 
     var app = builder.Build();
 
@@ -156,10 +185,17 @@ try
         app.UseSwaggerUI();
     }
 
-    app.UseHttpsRedirection();
     app.UseCors("Default");
+
+    // Pipeline de middlewares da aplicação:
+    // Exception -> Authentication -> TenantResolution -> TenantValidation -> Authorization -> Audit
+    app.UseMiddleware<ExceptionMiddleware>();
     app.UseAuthentication();
+    app.UseMiddleware<TenantResolutionMiddleware>();
+    app.UseMiddleware<TenantValidationMiddleware>();
     app.UseAuthorization();
+    app.UseMiddleware<AuthorizationMiddleware>();
+    app.UseMiddleware<AuditMiddleware>();
     app.MapControllers();
 
     // Aplicar migrations no startup (apenas em desenvolvimento)
@@ -167,7 +203,8 @@ try
     {
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<MasterDbContext>();
-        dbContext.Database.EnsureCreated();
+        await dbContext.Database.EnsureCreatedAsync();
+        await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
 
     Log.Information("ERP SaaS Web API started successfully");

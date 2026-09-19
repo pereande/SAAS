@@ -386,6 +386,7 @@ public class AuthController : BaseController
             return Success(new UserDto
             {
                 Id = user.Id,
+                TenantId = user.TenantId,
                 Username = user.UserName,
                 Email = user.Email,
                 FirstName = user.FirstName,
@@ -784,6 +785,11 @@ public static class AuthDtos
         /// ID
         /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// ID do tenant (null para administradores da plataforma)
+        /// </summary>
+        public Guid? TenantId { get; set; }
 
         /// <summary>
         /// Usuário
