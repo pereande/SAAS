@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
 namespace ERP.Web.Middleware;
@@ -30,11 +31,11 @@ public class TenantResolutionMiddleware
     public TenantResolutionMiddleware(
         RequestDelegate next,
         IOptions<MultiTenancySettings> settings,
-        ILogger<TenantResolutionMiddleware> logger)
+        ILogger<TenantResolutionMiddleware>? logger = null)
     {
         _next = next;
         _settings = settings.Value;
-        _logger = logger;
+        _logger = logger ?? NullLogger<TenantResolutionMiddleware>.Instance;
     }
 
     /// <summary>
