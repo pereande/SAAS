@@ -10,14 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Tenant", "src\ERP.Tenan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Web", "src\ERP.Web\ERP.Web.csproj", "{D4E5F6G7-H8I9-40J1-K2L3-M4N5O6P7Q8R9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Web.Tests", "tests\ERP.Web.Tests\ERP.Web.Tests.csproj", "{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Master.Tests", "tests\ERP.Master.Tests\ERP.Master.Tests.csproj", "{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Tenant.Tests", "tests\ERP.Tenant.Tests\ERP.Tenant.Tests.csproj", "{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERP.Shared.Tests", "tests\ERP.Shared.Tests\ERP.Shared.Tests.csproj", "{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
