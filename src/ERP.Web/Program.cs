@@ -63,9 +63,12 @@ try
         var tenantContext = httpContext.GetTenantContext();
         if (tenantContext?.TenantId is not Guid tenantId || tenantId == Guid.Empty)
             throw new InvalidOperationException("A valid tenant is required for tenant-scoped data access.");
+        var tenantConnectionString = tenantContext.ConnectionString;
+        if (string.IsNullOrWhiteSpace(tenantConnectionString))
+            throw new InvalidOperationException("The resolved tenant does not have a database connection configured.");
 
         var options = new DbContextOptionsBuilder<TenantDbContext>()
-            .UseNpgsql(dbSettings.MasterConnectionString)
+            .UseNpgsql(tenantConnectionString)
             .EnableDetailedErrors(dbSettings.EnableDetailedErrors)
             .EnableSensitiveDataLogging(dbSettings.EnableSensitiveDataLogging)
             .Options;
